@@ -1,23 +1,16 @@
 ﻿import 'package:flutter/material.dart';
-import 'package:remedio_certeiro/screens_routes.dart';
 
-class UserRegisterScreen extends StatefulWidget {
+import 'package:remedio_certeiro/screens-routes.dart';
+import 'package:remedio_certeiro/utils/validators.dart';
+
+class UserRegisterScreen extends StatelessWidget {
   const UserRegisterScreen({super.key});
 
   @override
-  UserRegisterScreenState createState() => UserRegisterScreenState();
-}
-
-class UserRegisterScreenState extends State<UserRegisterScreen> {
-  final _formKey = GlobalKey<FormState>();
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
-  final TextEditingController _ageController = TextEditingController();
-  final TextEditingController _cpfController = TextEditingController();
-
-  @override
   Widget build(BuildContext context) {
+    final Validators validationService = Validators();
+    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Realize seu cadastro'),
@@ -25,95 +18,108 @@ class UserRegisterScreenState extends State<UserRegisterScreen> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
-          key: _formKey,
+          key: formKey,
           child: Column(
             children: [
+              // Nome
               TextFormField(
-                controller: _nameController,
+                controller: TextEditingController(),
                 decoration: const InputDecoration(
                   labelText: 'Nome',
                   prefixIcon: Icon(Icons.person),
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor, insira seu nome';
-                  }
-                  return null;
-                },
+                validator: validationService.validateName,
               ),
               const SizedBox(height: 16),
+
+              // Senha
               TextFormField(
-                controller: _passwordController,
+                controller: TextEditingController(),
                 obscureText: true,
                 decoration: const InputDecoration(
                   labelText: 'Senha',
                   prefixIcon: Icon(Icons.lock),
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor, insira uma senha';
-                  }
-                  return null;
-                },
+                validator: validationService.validatePassword,
               ),
               const SizedBox(height: 16),
+
+              // Confirmar Senha
               TextFormField(
-                controller: _confirmPasswordController,
+                controller: TextEditingController(),
                 obscureText: true,
                 decoration: const InputDecoration(
                   labelText: 'Confirmar Senha',
                   prefixIcon: Icon(Icons.lock),
                 ),
                 validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor, confirme a senha';
-                  }
-                  if (value != _passwordController.text) {
-                    return 'As senhas não coincidem';
-                  }
-                  return null;
+                  return validationService.validateConfirmPassword(
+                      value, 'senha'); // Passe a senha aqui
                 },
               ),
               const SizedBox(height: 16),
+
+              // Idade
               TextFormField(
-                controller: _ageController,
+                controller: TextEditingController(),
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
                   labelText: 'Idade',
                   prefixIcon: Icon(Icons.calendar_today),
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor, insira sua idade';
-                  }
-                  return null;
-                },
+                validator: validationService.validateAge,
               ),
               const SizedBox(height: 16),
+
+              // CPF
               TextFormField(
-                controller: _cpfController,
+                controller: TextEditingController(),
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
                   labelText: 'CPF',
                   prefixIcon: Icon(Icons.credit_card),
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor, insira seu CPF';
-                  }
-                  if (value.length != 11) {
-                    return 'CPF deve ter 11 dígitos';
-                  }
-                  return null;
-                },
+                validator: validationService.validateCpf,
+              ),
+              const SizedBox(height: 16),
+
+              // Telefone
+              TextFormField(
+                controller: TextEditingController(),
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: 'Telefone',
+                  prefixIcon: Icon(Icons.phone),
+                ),
+                validator: validationService.validatePhone,
+              ),
+              const SizedBox(height: 16),
+
+              // E-mail
+              TextFormField(
+                controller: TextEditingController(),
+                keyboardType: TextInputType.emailAddress,
+                decoration: const InputDecoration(
+                  labelText: 'E-mail',
+                  prefixIcon: Icon(Icons.email),
+                ),
+                validator: validationService.validateEmail,
               ),
               const SizedBox(height: 32),
+
+              // Botão de Cadastro
               ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    // Aqui você pode fazer a lógica de registro
-                    // Por exemplo, enviar os dados para o servidor ou registrar no banco de dados local
-                    Navigator.pushReplacementNamed(context, ScreensRoutes.home);
+                onPressed: () async {
+                  if (formKey.currentState?.validate() ?? false) {
+                    // Lógica de cadastro
+                    final result = await _registerUser(); // Sua lógica de registro aqui
+                    if (result != null) {
+                      Navigator.pushReplacementNamed(context, ScreensRoutes.home);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Erro ao cadastrar')),
+                      );
+                    }
                   }
                 },
                 child: const Text('Cadastrar'),
@@ -123,5 +129,11 @@ class UserRegisterScreenState extends State<UserRegisterScreen> {
         ),
       ),
     );
+  }
+
+  // Função de cadastro fictícia
+  Future<String?> _registerUser() async {
+    // Lógica de cadastro aqui
+    return null; // Substitua pelo resultado da sua lógica de cadastro
   }
 }

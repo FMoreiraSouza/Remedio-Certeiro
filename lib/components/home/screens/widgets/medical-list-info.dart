@@ -10,7 +10,6 @@ class MedicalListInfo extends StatelessWidget {
 
   final String name;
   final String description;
-
   final String useMode;
 
   @override
@@ -20,20 +19,28 @@ class MedicalListInfo extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(50),
-          color: Colors.yellow.shade200,
+          color: const Color(0xFFDC9502),
         ),
-        child: ListView(
-          shrinkWrap: true,
-          padding: const EdgeInsets.all(8),
+        child: Column(
           children: <Widget>[
-            Container(
-              margin: const EdgeInsets.all(10),
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.yellow,
-                borderRadius: BorderRadius.circular(15),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(8.0),
+                margin: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.yellow,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Text(
+                  name,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
               ),
-              child: Text(name),
             ),
             ListTile(
               leading: const Icon(Icons.description),

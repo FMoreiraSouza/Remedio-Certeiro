@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:remedio_certeiro/providers.dart';
-import 'package:remedio_certeiro/screens_routes.dart';
+import 'package:remedio_certeiro/screens-routes.dart';
+import 'package:remedio_certeiro/utils/app-theme.dart';
 
 void main() {
   runApp(
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.yellow)),
+      theme: AppTheme.getTheme(),
       onGenerateTitle: (context) {
         return 'Remédio Certeiro';
       },

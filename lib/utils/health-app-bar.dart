@@ -1,24 +1,28 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:remedio_certeiro/screens-routes.dart';
 
 class HealthAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const HealthAppBar({super.key});
+  const HealthAppBar({super.key, required this.title});
+
+  final String title;
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      centerTitle: true,
-      backgroundColor: Colors.yellow,
-      title: const Text("Remédio Certeiro"),
+      title: Text(title),
       actions: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: IconButton(
-            icon: const Icon(Icons.medical_services),
-            onPressed: () {
-              Scaffold.of(context).openEndDrawer();
-            },
-          ),
-        )
+        IconButton(
+          icon: const Icon(Icons.medical_services),
+          onPressed: () {
+            Navigator.pushNamed(context, ScreensRoutes.medicineRegister);
+          },
+        ),
+        IconButton(
+          icon: const Icon(Icons.person),
+          onPressed: () {
+            Navigator.pushNamed(context, ScreensRoutes.profile);
+          },
+        ),
       ],
     );
   }

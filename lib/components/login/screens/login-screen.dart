@@ -1,7 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:remedio_certeiro/components/login/controllers/login_controller.dart';
-import 'package:remedio_certeiro/screens_routes.dart';
+import 'package:remedio_certeiro/screens-routes.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -17,7 +17,7 @@ class LoginScreen extends StatelessWidget {
             child: Container(
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('resources/images/app-logo-2.png'),
+                  image: AssetImage('resources/images/1.png'),
                   fit: BoxFit.fill,
                 ),
               ),

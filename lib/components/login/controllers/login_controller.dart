@@ -1,5 +1,5 @@
 ﻿import 'package:flutter/material.dart';
-import 'package:remedio_certeiro/screens_routes.dart';
+import 'package:remedio_certeiro/screens-routes.dart';
 
 class LoginController extends ChangeNotifier {
   String _username = '';
