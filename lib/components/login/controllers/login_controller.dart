@@ -1,5 +1,5 @@
 ﻿import 'package:flutter/material.dart';
-import 'package:remedio_certeiro/screens-routes.dart';
+import 'package:remedio_certeiro/screens_routes.dart';
 
 class LoginController extends ChangeNotifier {
   String _username = '';
@@ -25,9 +25,11 @@ class LoginController extends ChangeNotifier {
     notifyListeners();
 
     Future.delayed(const Duration(seconds: 2), () {
-      _isLoading = false;
-      Navigator.pushReplacementNamed(context, ScreensRoutes.home);
-      notifyListeners();
+      if (context.mounted) {
+        _isLoading = false;
+        Navigator.pushReplacementNamed(context, ScreensRoutes.home);
+        notifyListeners();
+      }
     });
   }
 

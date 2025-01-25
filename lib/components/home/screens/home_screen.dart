@@ -1,7 +1,7 @@
 ﻿import 'package:flutter/material.dart';
-import 'package:remedio_certeiro/components/home/screens/widgets/medical-list-info.dart';
-import 'package:remedio_certeiro/utils/health-app-bar.dart';
-import 'package:remedio_certeiro/utils/medicine-list.dart';
+import 'package:remedio_certeiro/components/home/screens/widgets/medical_list_info.dart';
+import 'package:remedio_certeiro/utils/health_app_bar.dart';
+import 'package:remedio_certeiro/utils/medicine_list.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

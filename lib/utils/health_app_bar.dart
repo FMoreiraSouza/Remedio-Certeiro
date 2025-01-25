@@ -1,5 +1,5 @@
 ﻿import 'package:flutter/material.dart';
-import 'package:remedio_certeiro/screens-routes.dart';
+import 'package:remedio_certeiro/screens_routes.dart';
 
 class HealthAppBar extends StatelessWidget implements PreferredSizeWidget {
   const HealthAppBar({super.key, required this.title});

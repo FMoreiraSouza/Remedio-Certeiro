@@ -1,7 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:remedio_certeiro/components/login/controllers/login_controller.dart';
-import 'package:remedio_certeiro/screens-routes.dart';
+import 'package:remedio_certeiro/screens_routes.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
