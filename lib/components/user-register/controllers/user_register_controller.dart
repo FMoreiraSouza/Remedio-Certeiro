@@ -22,33 +22,32 @@ class UserRegisterController extends ChangeNotifier {
     String name = nameController.text;
     String email = emailController.text;
     String password = passwordController.text;
-    int cpf = int.parse(cpfController.text);
+    String cpf = cpfController.text;
     int age = int.parse(ageController.text);
-    int phone = int.parse(phoneController.text);
-
-    print("Dados de entrada: nome=$name, email=$email");
+    String phone = phoneController.text;
 
     try {
       _isLoading = true;
       notifyListeners();
 
-      // Criar usuário com os valores estáticos
-      final user = await _appWriteService.createUser(
+      final user = await _appWriteService.account.create(
+        userId: 'unique()',
         email: email,
         password: password,
         name: name,
       );
 
-      // Criar o documento do usuário com os dados adicionais
-      final userDocument = await _appWriteService.createUserDocument(
-        cpf: cpf,
-        age: age,
-        phone: phone,
-        userId: user['_id'], // Passar o ID do usuário criado
+      await _appWriteService.database.createDocument(
+        databaseId: '67944210001fd099f8bc',
+        collectionId: '6794439e000f4d482ae3',
+        documentId: 'unique()',
+        data: {
+          'userId': user.$id,
+          'age': age,
+          'cpf': cpf,
+          'phone': phone,
+        },
       );
-
-      print("Usuário criado com sucesso: ${user['_id']}");
-      print("Documento do usuário criado: ${userDocument['_id']}");
 
       _isLoading = false;
       notifyListeners();
