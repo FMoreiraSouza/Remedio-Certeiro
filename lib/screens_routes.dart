@@ -1,6 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:remedio_certeiro/components/home/screens/home_screen.dart';
+import 'package:remedio_certeiro/components/login/controllers/login_controller.dart';
 import 'package:remedio_certeiro/components/login/screens/login_screen.dart';
 import 'package:remedio_certeiro/components/medicine-register/screens/medicine_register_screen.dart';
 import 'package:remedio_certeiro/components/profile/screens/profile_screen.dart';
@@ -18,7 +19,9 @@ class ScreensRoutes {
 
 Map<String, WidgetBuilder> getRoutes() {
   return {
-    ScreensRoutes.login: (context) => const LoginScreen(),
+    ScreensRoutes.login: (context) => LoginScreen(
+          controller: Provider.of<LoginController>(context, listen: false),
+        ),
     ScreensRoutes.userRegister: (context) => UserRegisterScreen(
           controller: Provider.of<UserRegisterController>(context, listen: false),
         ),

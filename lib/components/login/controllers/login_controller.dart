@@ -1,13 +1,19 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:remedio_certeiro/api-setup/app_write_service.dart';
 import 'package:remedio_certeiro/screens_routes.dart';
 
 class LoginController extends ChangeNotifier {
+  final AppWriteService _appWriteService;
+
+  LoginController(this._appWriteService);
+
   String _username = '';
   String _password = '';
-  bool _isLoading = false;
 
   String get username => _username;
   String get password => _password;
+
+  bool _isLoading = false;
   bool get isLoading => _isLoading;
 
   void setUsername(String value) {
@@ -20,17 +26,43 @@ class LoginController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void login(BuildContext context) {
+  Future<void> login(BuildContext context) async {
     _isLoading = true;
     notifyListeners();
 
-    Future.delayed(const Duration(seconds: 2), () {
-      if (context.mounted) {
-        _isLoading = false;
-        Navigator.pushReplacementNamed(context, ScreensRoutes.home);
-        notifyListeners();
-      }
-    });
+    //   try {
+    //     await _appWriteService.account.createEmailPasswordSession(
+    //       email: _username,
+    //       password: _password,
+    //     );
+
+    //     if (context.mounted) {
+    //       _isLoading = false;
+    //       Navigator.pushReplacementNamed(context, ScreensRoutes.home);
+    //       notifyListeners();
+    //     }
+    //   } catch (e) {
+    //     _isLoading = false;
+    //     notifyListeners();
+
+    //     if (context.mounted) {
+    //       showDialog(
+    //         context: context,
+    //         builder: (context) => AlertDialog(
+    //           title: const Text('Erro'),
+    //           content: const Text('Credenciais inválidas: Por gentiliza, cheque seu email ou senha'),
+    //           actions: [
+    //             TextButton(
+    //               onPressed: () {
+    //                 Navigator.of(context).pop();
+    //               },
+    //               child: const Text('Ok'),
+    //             ),
+    //           ],
+    //         ),
+    //       );
+    //     }
+    //   }
   }
 
   void reset() {

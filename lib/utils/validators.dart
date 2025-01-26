@@ -10,6 +10,9 @@
     if (value == null || value.isEmpty) {
       return 'Por favor, insira uma senha';
     }
+    if (value.length < 8) {
+      return 'Senha deve ter 8 dígitos ou mais';
+    }
     return null;
   }
 

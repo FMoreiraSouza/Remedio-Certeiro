@@ -1,4 +1,5 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:remedio_certeiro/components/user-register/controllers/user_register_controller.dart';
 import 'package:remedio_certeiro/utils/validators.dart';
 
@@ -102,13 +103,19 @@ class UserRegisterScreen extends StatelessWidget {
                   validator: validationService.validateEmail,
                 ),
                 const SizedBox(height: 32),
-                ElevatedButton(
-                  onPressed: () async {
-                    if (formKey.currentState?.validate() ?? false) {
-                      await controller.registerUser();
-                    }
+                Consumer<UserRegisterController>(
+                  builder: (context, userRegisterController, child) {
+                    return userRegisterController.isLoading
+                        ? const CircularProgressIndicator()
+                        : ElevatedButton(
+                            onPressed: () async {
+                              if (formKey.currentState?.validate() ?? false) {
+                                await controller.registerUser(context);
+                              }
+                            },
+                            child: const Text('Cadastrar'),
+                          );
                   },
-                  child: const Text('Cadastrar'),
                 ),
               ],
             ),

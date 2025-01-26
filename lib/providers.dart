@@ -8,10 +8,11 @@ import 'package:remedio_certeiro/components/user-register/controllers/user_regis
 
 List<SingleChildWidget> getProviders() {
   return [
-    ChangeNotifierProvider(create: (_) => LoginController()),
+    Provider(create: (_) => AppWriteService()),
+    ChangeNotifierProvider(
+        create: (context) => LoginController(Provider.of<AppWriteService>(context, listen: false))),
     ChangeNotifierProvider(create: (_) => HomeController()),
     ChangeNotifierProvider(create: (_) => MedicineRegisterController()),
-    Provider(create: (_) => AppWriteService()),
     ChangeNotifierProvider(
         create: (context) =>
             UserRegisterController(Provider.of<AppWriteService>(context, listen: false))),
