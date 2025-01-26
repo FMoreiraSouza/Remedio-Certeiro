@@ -19,30 +19,36 @@ class UserRegisterController extends ChangeNotifier {
   bool get isLoading => _isLoading;
 
   Future<void> registerUser(BuildContext context) async {
-    final name = nameController.text;
-    final password = passwordController.text;
+    String name = nameController.text;
+    String email = emailController.text;
+    String password = passwordController.text;
+    int cpf = int.parse(cpfController.text);
+    int age = int.parse(ageController.text);
+    int phone = int.parse(phoneController.text);
 
-    final cpf = int.tryParse(cpfController.text) ?? 0;
-    final age = int.tryParse(ageController.text) ?? 0;
-    final email = emailController.text;
-    final phone = int.tryParse(phoneController.text) ?? 0;
+    print("Dados de entrada: nome=$name, email=$email");
 
     try {
       _isLoading = true;
       notifyListeners();
 
-      final user = await _appWriteService.createUserGraphQL(
+      // Criar usuário com os valores estáticos
+      final user = await _appWriteService.createUser(
         email: email,
         password: password,
+        name: name,
       );
 
-      await _appWriteService.createUserProfileGraphQL(
-        userId: user['id'],
-        name: name,
-        age: age,
+      // Criar o documento do usuário com os dados adicionais
+      final userDocument = await _appWriteService.createUserDocument(
         cpf: cpf,
+        age: age,
         phone: phone,
+        userId: user['_id'], // Passar o ID do usuário criado
       );
+
+      print("Usuário criado com sucesso: ${user['_id']}");
+      print("Documento do usuário criado: ${userDocument['_id']}");
 
       _isLoading = false;
       notifyListeners();
@@ -79,6 +85,8 @@ class UserRegisterController extends ChangeNotifier {
     } catch (e) {
       _isLoading = false;
       notifyListeners();
+
+      print("Erro ao cadastrar: $e");
       Fluttertoast.showToast(
         msg: 'Erro ao cadastrar: $e',
         toastLength: Toast.LENGTH_LONG,

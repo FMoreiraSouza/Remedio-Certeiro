@@ -1,6 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:remedio_certeiro/api-setup/app_write_service.dart';
 import 'package:remedio_certeiro/screens_routes.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginController extends ChangeNotifier {
   final AppWriteService _appWriteService;
@@ -30,39 +31,45 @@ class LoginController extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    //   try {
-    //     await _appWriteService.account.createEmailPasswordSession(
-    //       email: _username,
-    //       password: _password,
-    //     );
+    try {
+      // await _appWriteService.login(_username, _password);
 
-    //     if (context.mounted) {
-    //       _isLoading = false;
-    //       Navigator.pushReplacementNamed(context, ScreensRoutes.home);
-    //       notifyListeners();
-    //     }
-    //   } catch (e) {
-    //     _isLoading = false;
-    //     notifyListeners();
+      // Lógica após o login bem-sucedido
+      if (context.mounted) {
+        _isLoading = false;
+        Navigator.pushReplacementNamed(context, ScreensRoutes.home);
+        notifyListeners();
+      }
+    } catch (e) {
+      _isLoading = false;
+      notifyListeners();
 
-    //     if (context.mounted) {
-    //       showDialog(
-    //         context: context,
-    //         builder: (context) => AlertDialog(
-    //           title: const Text('Erro'),
-    //           content: const Text('Credenciais inválidas: Por gentiliza, cheque seu email ou senha'),
-    //           actions: [
-    //             TextButton(
-    //               onPressed: () {
-    //                 Navigator.of(context).pop();
-    //               },
-    //               child: const Text('Ok'),
-    //             ),
-    //           ],
-    //         ),
-    //       );
-    //     }
-    //   }
+      // Exibe mensagem de erro
+      Fluttertoast.showToast(
+        msg: 'Erro ao fazer login: $e',
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 2,
+      );
+
+      if (context.mounted) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Erro'),
+            content: const Text('Credenciais inválidas: Por gentileza, cheque seu email ou senha'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Ok'),
+              ),
+            ],
+          ),
+        );
+      }
+    }
   }
 
   void reset() {
