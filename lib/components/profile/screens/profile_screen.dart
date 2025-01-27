@@ -1,88 +1,120 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:remedio_certeiro/components/profile/controllers/profile_controller.dart';
 import 'package:remedio_certeiro/screens_routes.dart';
 
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({super.key, required this.controller});
+
+  final ProfileController controller;
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) {
+        widget.controller.fetchUserData();
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    // Exemplo de dados do usuário. Eles podem ser passados via um modelo ou obtidos de um banco de dados
-    const String name = "João Silva";
-    const String phone = "(11) 91234-5678";
-    const String age = "30 anos";
-    const String cpf = "123.456.789-00";
-    const String email = "joao.silva@example.com";
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Perfil do Usuário'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            // Nome
-            const Row(
-              children: [
-                Icon(Icons.person),
-                SizedBox(width: 8),
-                Text('Nome: $name', style: TextStyle(fontSize: 16)),
-              ],
-            ),
-            const SizedBox(height: 16),
+      body: Consumer<ProfileController>(
+        builder: (context, controller, child) {
+          return Stack(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // Nome
+                    Row(
+                      children: [
+                        const Icon(Icons.person),
+                        const SizedBox(width: 8),
+                        Text('Nome: ${controller.user?.name}',
+                            style: const TextStyle(fontSize: 16)),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
 
-            // Telefone
-            const Row(
-              children: [
-                Icon(Icons.phone),
-                SizedBox(width: 8),
-                Text('Telefone: $phone', style: TextStyle(fontSize: 16)),
-              ],
-            ),
-            const SizedBox(height: 16),
+                    // Telefone
+                    Row(
+                      children: [
+                        const Icon(Icons.phone),
+                        const SizedBox(width: 8),
+                        Text('Telefone: ${controller.userInfoModel?.phone}',
+                            style: const TextStyle(fontSize: 16)),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
 
-            // Idade
-            const Row(
-              children: [
-                Icon(Icons.calendar_today),
-                SizedBox(width: 8),
-                Text('Idade: $age', style: TextStyle(fontSize: 16)),
-              ],
-            ),
-            const SizedBox(height: 16),
+                    // Idade
+                    Row(
+                      children: [
+                        const Icon(Icons.calendar_today),
+                        const SizedBox(width: 8),
+                        Text('Idade: ${controller.userInfoModel?.age}',
+                            style: const TextStyle(fontSize: 16)),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
 
-            // CPF
-            const Row(
-              children: [
-                Icon(Icons.credit_card),
-                SizedBox(width: 8),
-                Text('CPF: $cpf', style: TextStyle(fontSize: 16)),
-              ],
-            ),
-            const SizedBox(height: 16),
+                    // CPF
+                    Row(
+                      children: [
+                        const Icon(Icons.credit_card),
+                        const SizedBox(width: 8),
+                        Text('CPF: ${controller.userInfoModel?.cpf}',
+                            style: const TextStyle(fontSize: 16)),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
 
-            // E-mail
-            const Row(
-              children: [
-                Icon(Icons.email),
-                SizedBox(width: 8),
-                Text('E-mail: $email', style: TextStyle(fontSize: 16)),
-              ],
-            ),
-            const SizedBox(height: 32),
-            ElevatedButton(
-              style: const ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.red)),
-              onPressed: () {
-                Navigator.pushNamed(context, ScreensRoutes.login);
-              },
-              child: const Text(
-                "Sair",
-                style: TextStyle(color: Colors.white),
+                    // E-mail
+                    Row(
+                      children: [
+                        const Icon(Icons.email),
+                        const SizedBox(width: 8),
+                        Text('E-mail: ${controller.user?.email}',
+                            style: const TextStyle(fontSize: 16)),
+                      ],
+                    ),
+                    const SizedBox(height: 32),
+                    ElevatedButton(
+                      style: const ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.red)),
+                      onPressed: () {
+                        Navigator.pushNamed(context, ScreensRoutes.login);
+                      },
+                      child: const Text(
+                        "Sair",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
-        ),
+              if (controller.isLoading)
+                Container(
+                  color: Colors.black.withValues(alpha: 0.5),
+                  child: const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+            ],
+          );
+        },
       ),
     );
   }

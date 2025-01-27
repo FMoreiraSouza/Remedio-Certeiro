@@ -2,6 +2,7 @@
 import 'package:remedio_certeiro/api-setup/app_write_service.dart';
 import 'package:remedio_certeiro/screens_routes.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:remedio_certeiro/utils/shared_preferences_service.dart'; // Importe a classe
 
 class LoginController extends ChangeNotifier {
   final AppWriteService _appWriteService;
@@ -32,19 +33,25 @@ class LoginController extends ChangeNotifier {
     notifyListeners();
 
     try {
-      // await _appWriteService.login(_username, _password);
+      final session = await _appWriteService.account.createEmailPasswordSession(
+        email: _username,
+        password: _password,
+      );
 
-      // Lógica após o login bem-sucedido
+      await SharedPreferencesService.saveString('sessionId', session.$id);
+
       if (context.mounted) {
-        _isLoading = false;
-        Navigator.pushReplacementNamed(context, ScreensRoutes.home);
-        notifyListeners();
+        // Agendando a execução após a construção do widget
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _isLoading = false;
+          Navigator.pushReplacementNamed(context, ScreensRoutes.home);
+          notifyListeners();
+        });
       }
     } catch (e) {
       _isLoading = false;
       notifyListeners();
 
-      // Exibe mensagem de erro
       Fluttertoast.showToast(
         msg: 'Erro ao fazer login: $e',
         toastLength: Toast.LENGTH_LONG,
@@ -70,12 +77,5 @@ class LoginController extends ChangeNotifier {
         );
       }
     }
-  }
-
-  void reset() {
-    _username = '';
-    _password = '';
-    _isLoading = false;
-    notifyListeners();
   }
 }

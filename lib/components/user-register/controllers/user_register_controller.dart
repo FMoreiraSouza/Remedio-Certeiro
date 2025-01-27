@@ -26,6 +26,8 @@ class UserRegisterController extends ChangeNotifier {
     int age = int.parse(ageController.text);
     String phone = phoneController.text;
 
+    print("Dados de entrada: nome=$name, email=$email");
+
     try {
       _isLoading = true;
       notifyListeners();

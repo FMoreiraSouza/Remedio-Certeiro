@@ -3,18 +3,28 @@ import 'package:provider/provider.dart';
 import 'package:remedio_certeiro/providers.dart';
 import 'package:remedio_certeiro/screens_routes.dart';
 import 'package:remedio_certeiro/utils/app_theme.dart';
+import 'package:remedio_certeiro/utils/shared_preferences_service.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await SharedPreferencesService.init();
+
+  // Verifica se há um sessionId salvo
+  final sessionId = SharedPreferencesService.getString('sessionId');
+
   runApp(
     MultiProvider(
       providers: getProviders(),
-      child: const MyApp(),
+      child: MyApp(sessionId: sessionId),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final String? sessionId;
+
+  const MyApp({super.key, this.sessionId});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +33,7 @@ class MyApp extends StatelessWidget {
       onGenerateTitle: (context) {
         return 'Remédio Certeiro';
       },
-      initialRoute: ScreensRoutes.login,
+      initialRoute: sessionId != null ? ScreensRoutes.home : ScreensRoutes.login,
       routes: getRoutes(),
     );
   }
