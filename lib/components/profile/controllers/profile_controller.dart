@@ -3,6 +3,8 @@ import 'package:appwrite/models.dart';
 import 'package:flutter/material.dart';
 import 'package:remedio_certeiro/api-setup/app_write_service.dart';
 import 'package:remedio_certeiro/models/user_info_model.dart';
+import 'package:remedio_certeiro/screens_routes.dart';
+import 'package:remedio_certeiro/utils/shared_preferences_service.dart';
 
 class ProfileController extends ChangeNotifier {
   final AppWriteService _appWriteService;
@@ -16,7 +18,7 @@ class ProfileController extends ChangeNotifier {
 
   Future<void> fetchUserData() async {
     _isLoading = true;
-    notifyListeners(); // Notify listeners that the loading state has changed
+    notifyListeners();
 
     try {
       final userData = await _appWriteService.account.get();
@@ -40,7 +42,24 @@ class ProfileController extends ChangeNotifier {
       errorMessage = 'Erro ao recuperar dados do usuário: $e';
     } finally {
       _isLoading = false;
-      notifyListeners(); // Notify listeners that the loading state has ended
+      notifyListeners();
+    }
+  }
+
+  Future<void> logout(BuildContext context) async {
+    _isLoading = true;
+    notifyListeners();
+    try {
+      await _appWriteService.account.deleteSession(sessionId: 'current');
+      await SharedPreferencesService.remove('sessionId');
+      if (context.mounted) {
+        Navigator.pushNamed(context, ScreensRoutes.login);
+      }
+    } catch (e) {
+      errorMessage = 'Erro ao tentar realizar o logout: $e';
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
   }
 }

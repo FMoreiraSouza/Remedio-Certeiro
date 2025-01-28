@@ -1,7 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:remedio_certeiro/components/profile/controllers/profile_controller.dart';
-import 'package:remedio_certeiro/screens_routes.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key, required this.controller});
@@ -95,7 +94,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ElevatedButton(
                       style: const ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.red)),
                       onPressed: () {
-                        Navigator.pushNamed(context, ScreensRoutes.login);
+                        controller.logout(context);
                       },
                       child: const Text(
                         "Sair",
@@ -107,7 +106,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               if (controller.isLoading)
                 Container(
-                  color: Colors.black.withValues(alpha: 0.5),
+                  color: Colors.white,
                   child: const Center(
                     child: CircularProgressIndicator(),
                   ),

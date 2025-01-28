@@ -10,7 +10,6 @@ void main() async {
 
   await SharedPreferencesService.init();
 
-  // Verifica se há um sessionId salvo
   final sessionId = SharedPreferencesService.getString('sessionId');
 
   runApp(

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:remedio_certeiro/components/home/screens/home_screen.dart';
 import 'package:remedio_certeiro/components/login/controllers/login_controller.dart';
 import 'package:remedio_certeiro/components/login/screens/login_screen.dart';
+import 'package:remedio_certeiro/components/medicine-register/controllers/medicine_register_controller.dart';
 import 'package:remedio_certeiro/components/medicine-register/screens/medicine_register_screen.dart';
 import 'package:remedio_certeiro/components/profile/controllers/profile_controller.dart';
 import 'package:remedio_certeiro/components/profile/screens/profile_screen.dart';
@@ -30,7 +31,8 @@ Map<String, WidgetBuilder> getRoutes() {
     ScreensRoutes.profile: (context) => ProfileScreen(
           controller: Provider.of<ProfileController>(context, listen: false),
         ),
-    ScreensRoutes.medicineRegister: (context) => const MedicineRegisterScreen(),
+    ScreensRoutes.medicineRegister: (context) => MedicineRegisterScreen(
+        controller: Provider.of<MedicineRegisterController>(context, listen: false)),
     // ScreensRoutes.medicineList: (context) => const MedicineListScreen(),
   };
 }
