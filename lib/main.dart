@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:remedio_certeiro/database/database_helper.dart';
 import 'package:remedio_certeiro/providers.dart';
 import 'package:remedio_certeiro/screens_routes.dart';
 import 'package:remedio_certeiro/utils/app_theme.dart';
@@ -11,6 +12,8 @@ void main() async {
   await SharedPreferencesService.init();
 
   final sessionId = SharedPreferencesService.getString('sessionId');
+
+  await DatabaseHelper.instance.database;
 
   runApp(
     MultiProvider(

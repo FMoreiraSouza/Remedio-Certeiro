@@ -4,6 +4,7 @@ class AppWriteService {
   late final Client client;
   late final Account account;
   late final Databases database;
+  late final Messaging messaging;
 
   AppWriteService() {
     client =
@@ -11,5 +12,6 @@ class AppWriteService {
 
     account = Account(client);
     database = Databases(client);
+    messaging = Messaging(client);
   }
 }

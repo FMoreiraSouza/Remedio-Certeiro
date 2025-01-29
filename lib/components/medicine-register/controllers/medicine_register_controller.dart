@@ -8,6 +8,7 @@ class MedicineRegisterController extends ChangeNotifier {
   final TextEditingController dosageController = TextEditingController();
   final TextEditingController purposeController = TextEditingController();
   final TextEditingController useModeController = TextEditingController();
+  final TextEditingController intervalController = TextEditingController();
   List<String> pharmaceuticalForms = [];
   List<String> therapeuticCategories = [];
   String? selectedPharmaceuticalForm;
@@ -22,6 +23,12 @@ class MedicineRegisterController extends ChangeNotifier {
   void setExpirationDate(DateTime pickedDate) {
     expirationDate = pickedDate;
     notifyListeners();
+  }
+
+  // Método para atualizar o intervalo e o valor no controlador
+  void setIntervalHours(int interval) {
+    intervalController.text = interval.toString();
+    notifyListeners(); // Para atualizar a UI
   }
 
   Future<void> loadData() async {
@@ -60,9 +67,10 @@ class MedicineRegisterController extends ChangeNotifier {
           'dosage': dosageController.text,
           'purpose': purposeController.text,
           'useMode': useModeController.text,
+          'interval': int.parse(intervalController.text),
           'pharmaceuticalForm': selectedPharmaceuticalForm,
           'therapeuticCategory': selectedTherapeuticCategory,
-          'expiration': expirationDate?.toIso8601String(),
+          'expirationDate': expirationDate?.toIso8601String(),
         },
       );
 

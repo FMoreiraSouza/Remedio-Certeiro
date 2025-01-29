@@ -1,6 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:remedio_certeiro/components/medicine-register/controllers/medicine_register_controller.dart';
+import 'package:flutter/services.dart';
 
 class MedicineRegisterScreen extends StatefulWidget {
   const MedicineRegisterScreen({super.key, required this.controller});
@@ -81,10 +82,66 @@ class _MedicineRegisterScreenState extends State<MedicineRegisterScreen> {
                 maxLines: null,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Por favor, infirm o modo de uso do remédio.';
+                    return 'Por favor, informe o modo de uso do remédio.';
                   }
                   return null;
                 },
+              ),
+              const SizedBox(height: 16),
+              // Label e Intervalo com botões de incrementar e decrementar
+              const Text(
+                'Intervalo entre as doses (em horas):',
+              ),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.remove),
+                    onPressed: () {
+                      final currentText = widget.controller.intervalController.text;
+                      if (currentText.isNotEmpty) {
+                        final currentInterval = int.tryParse(currentText);
+                        if (currentInterval != null && currentInterval > 1) {
+                          final newInterval = currentInterval - 1;
+                          widget.controller.intervalController.text = newInterval.toString();
+                          widget.controller.setIntervalHours(newInterval);
+                        }
+                      }
+                    },
+                  ),
+                  SizedBox(
+                    width: 60,
+                    child: TextField(
+                      textAlign: TextAlign.center,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      controller: widget.controller.intervalController,
+                      onChanged: (value) {
+                        if (value.isNotEmpty) {
+                          final newInterval = int.tryParse(value);
+                          if (newInterval != null) {
+                            widget.controller.setIntervalHours(newInterval);
+                          }
+                        }
+                      },
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.add),
+                    onPressed: () {
+                      final currentText = widget.controller.intervalController.text;
+                      if (currentText.isNotEmpty) {
+                        final currentInterval = int.tryParse(currentText);
+                        if (currentInterval != null) {
+                          final newInterval = currentInterval + 1;
+                          widget.controller.intervalController.text = newInterval.toString();
+                          widget.controller.setIntervalHours(newInterval);
+                        }
+                      }
+                    },
+                  ),
+                ],
               ),
               const SizedBox(height: 16),
               Consumer<MedicineRegisterController>(

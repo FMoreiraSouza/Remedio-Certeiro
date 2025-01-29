@@ -55,13 +55,7 @@ class _MyMedicineListScreenState extends State<MyMedicineListScreen> {
                     itemBuilder: (context, index) {
                       final remedio = remedios[index];
                       return MedicalListInfo(
-                        name: remedio['name'] ?? '',
-                        purpose: remedio['purpose'] ?? '',
-                        useMode: remedio['useMode'] ?? '',
-                        expiration: remedio['expiration'] ?? '',
-                        dosage: remedio['dosage'] ?? '',
-                        pharmaceuticalForm: remedio['pharmaceuticalForm'] ?? '',
-                        therapeuticCategory: remedio['therapeuticCategory'] ?? '',
+                        medicine: remedio,
                       );
                     },
                   ),

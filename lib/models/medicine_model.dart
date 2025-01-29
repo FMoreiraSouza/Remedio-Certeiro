@@ -1,39 +1,35 @@
-﻿class Medicine {
-  final String name;
-  final String description;
-  final String useMode;
+﻿class MedicineModel {
+  final String? name;
+  final String? purpose;
+  final String? useMode;
   final String? dosage;
-  final DateTime? expiryDate;
-  final String? manufacturer;
+  final int? interval;
+  final String? pharmaceuticalForm;
+  final String? therapeuticCategory;
+  final DateTime? expirationDate;
 
-  Medicine({
+  MedicineModel({
     required this.name,
-    required this.description,
+    required this.purpose,
     required this.useMode,
-    this.dosage,
-    this.expiryDate,
-    this.manufacturer,
+    required this.interval,
+    required this.dosage,
+    required this.expirationDate,
+    required this.pharmaceuticalForm,
+    required this.therapeuticCategory,
   });
 
-  Map<String, dynamic> toMap() {
-    return {
-      'name': name,
-      'description': description,
-      'useMode': useMode,
-      'dosage': dosage,
-      'expiryDate': expiryDate?.toIso8601String(),
-      'manufacturer': manufacturer,
-    };
-  }
-
-  factory Medicine.fromMap(Map<String, dynamic> map) {
-    return Medicine(
+  factory MedicineModel.fromMap(Map<String, dynamic> map) {
+    return MedicineModel(
       name: map['name'] as String,
-      description: map['description'] as String,
+      purpose: map['purpose'] as String,
       useMode: map['useMode'] as String,
       dosage: map['dosage'] as String?,
-      expiryDate: map['expiryDate'] != null ? DateTime.parse(map['expiryDate'] as String) : null,
-      manufacturer: map['manufacturer'] as String?,
+      interval: map['interval'] as int?,
+      expirationDate:
+          map['expirationDate'] != null ? DateTime.parse(map['expirationDate'] as String) : null,
+      pharmaceuticalForm: map['pharmaceuticalForm'] as String?,
+      therapeuticCategory: map['therapeuticCategory'] as String?,
     );
   }
 }
