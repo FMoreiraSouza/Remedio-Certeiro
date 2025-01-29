@@ -71,13 +71,13 @@ class LoginScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 32),
                       Consumer<LoginController>(
-                        builder: (context, loginController, child) {
-                          return loginController.isLoading
+                        builder: (context, value, child) {
+                          return value.isLoading
                               ? const CircularProgressIndicator()
                               : ElevatedButton(
                                   onPressed: () {
                                     if (formKey.currentState?.validate() ?? false) {
-                                      loginController.login(context);
+                                      value.login(context);
                                     }
                                   },
                                   child: const Text('Entrar'),

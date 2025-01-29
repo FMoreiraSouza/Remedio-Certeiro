@@ -1,7 +1,6 @@
 ﻿import 'package:flutter/material.dart';
-import 'package:remedio_certeiro/components/home/screens/widgets/medical_list_info.dart';
+import 'package:remedio_certeiro/screens_routes.dart';
 import 'package:remedio_certeiro/utils/health_app_bar.dart';
-import 'package:remedio_certeiro/utils/medicine_list.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -12,18 +11,24 @@ class HomeScreen extends StatelessWidget {
       appBar: const HealthAppBar(
         title: "Meus Remédios",
       ),
-      // drawer: const HealthDrawer(),
-      body: ListView.builder(
-        padding: const EdgeInsets.all(16.0),
-        itemCount: remedios.length,
-        itemBuilder: (context, index) {
-          final remedio = remedios[index];
-          return MedicalListInfo(
-            name: remedio["name"] ?? "",
-            description: remedio["description"] ?? "",
-            useMode: remedio["useMode"] ?? "",
-          );
-        },
+      body: Align(
+        alignment: Alignment.topCenter,
+        child: TextButton(
+          style: TextButton.styleFrom(
+            side: const BorderSide(color: Colors.yellow, width: 2),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(50),
+            ),
+            backgroundColor: Colors.transparent,
+          ),
+          onPressed: () {
+            Navigator.pushNamed(context, ScreensRoutes.myMedicineList);
+          },
+          child: const Text(
+            'Meus Remédios',
+            style: TextStyle(color: Colors.black),
+          ),
+        ),
       ),
     );
   }

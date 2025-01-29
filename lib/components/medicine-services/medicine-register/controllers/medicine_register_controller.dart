@@ -2,27 +2,19 @@
 import 'package:remedio_certeiro/api-setup/app_write_service.dart';
 
 class MedicineRegisterController extends ChangeNotifier {
-  final AppWriteService _appWriteService;
+  final AppWriteService _appWriteService = AppWriteService();
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController dosageController = TextEditingController();
-  final TextEditingController purposeController = TextEditingController();
-  final TextEditingController useModeController = TextEditingController();
+  final TextEditingController quantityController = TextEditingController();
   List<String> pharmaceuticalForms = [];
   List<String> therapeuticCategories = [];
-  String? selectedPharmaceuticalForm;
-  String? selectedTherapeuticCategory;
+  String? selectedPharmaceuticalForm; // Variável para armazenar a forma farmacêutica selecionada
+  String?
+      selectedTherapeuticCategory; // Variável para armazenar a categoria terapêutica selecionada
   DateTime? expirationDate;
 
-  bool _isLoading = false;
-  bool get isLoading => _isLoading;
-
-  MedicineRegisterController(this._appWriteService);
-
-  void setExpirationDate(DateTime pickedDate) {
-    expirationDate = pickedDate;
-    notifyListeners();
-  }
+  bool isLoading = true;
 
   Future<void> loadData() async {
     try {
@@ -40,7 +32,7 @@ class MedicineRegisterController extends ChangeNotifier {
       therapeuticCategories =
           categoriesResponse.documents.map((doc) => doc.data['name'] as String).toList();
 
-      _isLoading = false;
+      isLoading = false;
       notifyListeners();
     } catch (e) {
       throw ('Erro ao carregar dados: $e');
@@ -48,8 +40,6 @@ class MedicineRegisterController extends ChangeNotifier {
   }
 
   Future<void> saveMedicine(BuildContext context) async {
-    _isLoading = true;
-    notifyListeners();
     try {
       await _appWriteService.database.createDocument(
         databaseId: "67944210001fd099f8bc",
@@ -58,16 +48,12 @@ class MedicineRegisterController extends ChangeNotifier {
         data: {
           'name': nameController.text,
           'dosage': dosageController.text,
-          'purpose': purposeController.text,
-          'useMode': useModeController.text,
+          'quantity': int.parse(quantityController.text),
           'pharmaceuticalForm': selectedPharmaceuticalForm,
           'therapeuticCategory': selectedTherapeuticCategory,
           'expiration': expirationDate?.toIso8601String(),
         },
       );
-
-      _isLoading = false;
-      notifyListeners();
 
       if (context.mounted) {
         showDialog(

@@ -5,6 +5,8 @@ import 'package:remedio_certeiro/components/login/controllers/login_controller.d
 import 'package:remedio_certeiro/components/login/screens/login_screen.dart';
 import 'package:remedio_certeiro/components/medicine-register/controllers/medicine_register_controller.dart';
 import 'package:remedio_certeiro/components/medicine-register/screens/medicine_register_screen.dart';
+import 'package:remedio_certeiro/components/my-medicine-list/controllers/my_medicine_list_controller.dart';
+import 'package:remedio_certeiro/components/my-medicine-list/screens/my_medicine_list_screen.dart';
 import 'package:remedio_certeiro/components/profile/controllers/profile_controller.dart';
 import 'package:remedio_certeiro/components/profile/screens/profile_screen.dart';
 import 'package:remedio_certeiro/components/user-register/controllers/user_register_controller.dart';
@@ -15,6 +17,7 @@ class ScreensRoutes {
   static const String login = "/login";
   static const String userRegister = "/user-register";
   static const String home = "/home";
+  static const String myMedicineList = "/my-medicine-list";
   static const String medicineRegister = "/medicine-register";
   static const String medicineList = "/medicine-list";
 }
@@ -28,6 +31,10 @@ Map<String, WidgetBuilder> getRoutes() {
           controller: Provider.of<UserRegisterController>(context, listen: false),
         ),
     ScreensRoutes.home: (context) => const HomeScreen(),
+
+    ScreensRoutes.myMedicineList: (context) => MyMedicineListScreen(
+        controller: Provider.of<MyMedicineListController>(context, listen: false)),
+
     ScreensRoutes.profile: (context) => ProfileScreen(
           controller: Provider.of<ProfileController>(context, listen: false),
         ),

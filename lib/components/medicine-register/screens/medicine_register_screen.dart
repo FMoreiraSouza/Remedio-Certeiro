@@ -1,37 +1,45 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:remedio_certeiro/components/medicine-register/controllers/medicine_register_controller.dart';
 
-class MedicineRegisterScreen extends StatelessWidget {
+class MedicineRegisterScreen extends StatefulWidget {
   const MedicineRegisterScreen({super.key, required this.controller});
 
   final MedicineRegisterController controller;
+
+  @override
+  State<MedicineRegisterScreen> createState() => _MedicineRegisterScreenState();
+}
+
+class _MedicineRegisterScreenState extends State<MedicineRegisterScreen> {
+  @override
+  void initState() {
+    widget.controller.loadData();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
-
-    final TextEditingController nameController = TextEditingController();
-    final TextEditingController dosageController = TextEditingController();
-    final TextEditingController quantityController = TextEditingController();
-    final TextEditingController reminderController = TextEditingController();
-    DateTime? expirationDate;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Cadastro de Remédio'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      resizeToAvoidBottomInset: true,
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 32.0),
         child: Form(
           key: formKey,
-          child: ListView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Nome do remédio
               TextFormField(
-                controller: nameController,
+                controller: widget.controller.nameController,
                 decoration: const InputDecoration(
                   labelText: 'Nome do remédio',
                   border: OutlineInputBorder(),
                 ),
+                textInputAction: TextInputAction.next,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Por favor, insira o nome do remédio.';
@@ -40,124 +48,140 @@ class MedicineRegisterScreen extends StatelessWidget {
                 },
               ),
               const SizedBox(height: 16),
-
-              // Dosagem
               TextFormField(
-                controller: dosageController,
+                controller: widget.controller.dosageController,
                 decoration: const InputDecoration(
-                  labelText: 'Dosagem (Ex.: 500mg, 10ml)',
+                  labelText: 'Dosagem (mg, ml)',
                   border: OutlineInputBorder(),
                 ),
+                textInputAction: TextInputAction.next,
               ),
               const SizedBox(height: 16),
-
-              // Forma farmacêutica (menu suspenso)
-              DropdownButtonFormField<String>(
-                decoration: const InputDecoration(
-                  labelText: 'Forma farmacêutica',
-                  border: OutlineInputBorder(),
-                ),
-                items: controller.pharmaceuticalForms
-                    .map((form) => DropdownMenuItem(
-                          value: form,
-                          child: Text(form),
-                        ))
-                    .toList(),
-                onChanged: (value) {},
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor, selecione uma forma farmacêutica.';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-
-              // Categoria ou classe terapêutica (menu suspenso)
-              DropdownButtonFormField<String>(
-                decoration: const InputDecoration(
-                  labelText: 'Classe terapêutica',
-                  border: OutlineInputBorder(),
-                ),
-                items: controller.therapeuticCategories
-                    .map((category) => DropdownMenuItem(
-                          value: category,
-                          child: Text(category),
-                        ))
-                    .toList(),
-                onChanged: (value) {},
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor, selecione uma categoria terapêutica.';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-
-              // Quantidade disponível
               TextFormField(
-                controller: quantityController,
+                controller: widget.controller.purposeController,
                 decoration: const InputDecoration(
-                  labelText: 'Quantidade disponível',
+                  labelText: 'Propósito',
                   border: OutlineInputBorder(),
                 ),
-                keyboardType: TextInputType.number,
+                textInputAction: TextInputAction.next,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Por favor, insira a quantidade disponível.';
-                  }
-                  if (int.tryParse(value) == null) {
-                    return 'Insira um número válido.';
+                    return 'Por favor, insira o propósito do remédio.';
                   }
                   return null;
                 },
               ),
               const SizedBox(height: 16),
-
-              // Data de validade
-              ListTile(
-                title: Text(
-                  expirationDate == null
-                      ? 'Selecione a data de validade'
-                      : 'Validade: ${expirationDate.day}/${expirationDate.month}/${expirationDate.year}',
+              TextFormField(
+                controller: widget.controller.useModeController,
+                decoration: const InputDecoration(
+                  labelText: 'Modo de uso',
+                  border: OutlineInputBorder(),
                 ),
-                trailing: const Icon(Icons.calendar_today),
-                onTap: () async {
-                  final pickedDate = await showDatePicker(
-                    context: context,
-                    initialDate: DateTime.now(),
-                    firstDate: DateTime.now(),
-                    lastDate: DateTime(2100),
+                maxLines: null,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Por favor, infirm o modo de uso do remédio.';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+              Consumer<MedicineRegisterController>(
+                builder: (context, controller, child) {
+                  return Column(
+                    children: [
+                      DropdownButtonFormField<String>(
+                        decoration: const InputDecoration(
+                          labelText: 'Forma farmacêutica',
+                          border: OutlineInputBorder(),
+                        ),
+                        items: controller.pharmaceuticalForms
+                            .map((form) => DropdownMenuItem(
+                                  value: form,
+                                  child: Text(form),
+                                ))
+                            .toList(),
+                        onChanged: (value) {
+                          controller.selectedPharmaceuticalForm = value;
+                        },
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Por favor, selecione uma forma farmacêutica.';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      DropdownButtonFormField<String>(
+                        decoration: const InputDecoration(
+                          labelText: 'Classe terapêutica',
+                          border: OutlineInputBorder(),
+                        ),
+                        items: controller.therapeuticCategories
+                            .map((category) => DropdownMenuItem(
+                                  value: category,
+                                  child: Text(category),
+                                ))
+                            .toList(),
+                        onChanged: (value) {
+                          controller.selectedTherapeuticCategory = value;
+                        },
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Por favor, selecione uma categoria terapêutica.';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      ListTile(
+                        title: Text(
+                          widget.controller.expirationDate == null
+                              ? 'Selecione a data de validade'
+                              : 'Validade: ${widget.controller.expirationDate?.day}/${widget.controller.expirationDate?.month}/${widget.controller.expirationDate?.year}',
+                        ),
+                        trailing: const Icon(Icons.calendar_today),
+                        onTap: () async {
+                          final pickedDate = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime.now(),
+                            lastDate: DateTime(2100),
+                          );
+                          if (pickedDate != null) {
+                            widget.controller.setExpirationDate(pickedDate);
+                          }
+                        },
+                      ),
+                    ],
                   );
-                  if (pickedDate != null) {
-                    expirationDate = pickedDate;
-                  }
                 },
               ),
               const SizedBox(height: 16),
-
-              // Lembrete de reposição
-              TextFormField(
-                controller: reminderController,
-                decoration: const InputDecoration(
-                  labelText: 'Lembrete de reposição (opcional)',
-                  border: OutlineInputBorder(),
-                ),
-                keyboardType: TextInputType.number,
-              ),
-              const SizedBox(height: 32),
-
-              // Botão de cadastro
-              ElevatedButton(
-                onPressed: () {
-                  if (formKey.currentState!.validate()) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Cadastro realizado com sucesso!')),
-                    );
-                  }
+              Consumer<MedicineRegisterController>(
+                builder: (context, value, child) {
+                  return value.isLoading
+                      ? const Align(
+                          alignment: Alignment.center,
+                          child: SizedBox(
+                            width: 25,
+                            height: 25,
+                            child: CircularProgressIndicator(),
+                          ),
+                        )
+                      : Align(
+                          alignment: Alignment.center,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              if (formKey.currentState!.validate()) {
+                                value.saveMedicine(context);
+                              }
+                            },
+                            child: const Text('Salvar medicamento'),
+                          ),
+                        );
                 },
-                child: const Text('Salvar medicamento'),
               ),
             ],
           ),

@@ -26,8 +26,6 @@ class UserRegisterController extends ChangeNotifier {
     int age = int.parse(ageController.text);
     String phone = phoneController.text;
 
-    print("Dados de entrada: nome=$name, email=$email");
-
     try {
       _isLoading = true;
       notifyListeners();
@@ -87,7 +85,6 @@ class UserRegisterController extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
 
-      print("Erro ao cadastrar: $e");
       Fluttertoast.showToast(
         msg: 'Erro ao cadastrar: $e',
         toastLength: Toast.LENGTH_LONG,
