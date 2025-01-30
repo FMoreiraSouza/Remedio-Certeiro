@@ -1,5 +1,7 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:remedio_certeiro/api-setup/app_write_service.dart';
+import 'package:remedio_certeiro/components/my-medicine-list/controllers/my_medicine_list_controller.dart';
 
 class MedicineRegisterController extends ChangeNotifier {
   final AppWriteService _appWriteService;
@@ -54,7 +56,23 @@ class MedicineRegisterController extends ChangeNotifier {
     }
   }
 
-  Future<void> saveMedicine(BuildContext context) async {
+  void clearData() {
+    nameController.clear();
+    dosageController.clear();
+    purposeController.clear();
+    useModeController.clear();
+    intervalController.clear();
+  }
+
+  void clearExpirationDate() {
+    expirationDate = null;
+  }
+
+  Future<void> saveMedicine(
+    BuildContext context,
+  ) async {
+    final medicineController = Provider.of<MyMedicineListController>(context, listen: false);
+
     _isLoading = true;
     notifyListeners();
     try {
@@ -99,6 +117,7 @@ class MedicineRegisterController extends ChangeNotifier {
                 onPressed: () {
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
+                  medicineController.fetchMedicines();
                 },
                 child: const Text('OK'),
               ),

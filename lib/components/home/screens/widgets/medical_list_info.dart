@@ -112,7 +112,7 @@ class MedicalListInfo extends StatelessWidget {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () async {
-                      final nextDoseTime = DateTime.now().add(const Duration(minutes: 7 ?? 0));
+                      final nextDoseTime = DateTime.now().add(const Duration(minutes: 1 ?? 0));
 
                       await DatabaseHelper.instance.saveMedicineHour(
                         medicine.name ?? "Nome Indefinido",

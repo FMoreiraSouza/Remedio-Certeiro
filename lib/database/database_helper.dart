@@ -36,13 +36,30 @@ class DatabaseHelper {
     );
   }
 
-  // Função para salvar os dados no banco com o Document Id como id
   Future<void> saveMedicineHour(String name, DateTime nextDoseTime) async {
     final db = await instance.database;
+
     await db.insert(
       'medicineHours',
-      {'name': name, 'nextDoseTime': nextDoseTime.toIso8601String()},
+      {
+        'name': name,
+        'nextDoseTime': nextDoseTime.toIso8601String(),
+      },
       conflictAlgorithm: ConflictAlgorithm.replace, // Substitui caso o documento já exista
+    );
+  }
+
+  // Função para atualizar o nextDoseTime de um medicamento
+  Future<void> updateMedicineNextDoseTime(int id, DateTime nextDoseTime) async {
+    final db = await instance.database;
+
+    await db.update(
+      'medicineHours',
+      {
+        'nextDoseTime': nextDoseTime.toIso8601String(),
+      },
+      where: 'id = ?',
+      whereArgs: [id],
     );
   }
 

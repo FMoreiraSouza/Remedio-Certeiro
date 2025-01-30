@@ -15,8 +15,18 @@ class MedicineRegisterScreen extends StatefulWidget {
 class _MedicineRegisterScreenState extends State<MedicineRegisterScreen> {
   @override
   void initState() {
-    widget.controller.loadData();
     super.initState();
+    // Definir o valor inicial do intervalo como 0
+    widget.controller.intervalController.text = '0';
+    widget.controller.loadData();
+  }
+
+  @override
+  void dispose() {
+    // Limpar os dados ao sair da tela
+    widget.controller.clearData();
+    widget.controller.clearExpirationDate();
+    super.dispose();
   }
 
   @override
@@ -80,6 +90,7 @@ class _MedicineRegisterScreenState extends State<MedicineRegisterScreen> {
                   border: OutlineInputBorder(),
                 ),
                 maxLines: null,
+                textInputAction: TextInputAction.done,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Por favor, informe o modo de uso do remédio.';
@@ -102,7 +113,7 @@ class _MedicineRegisterScreenState extends State<MedicineRegisterScreen> {
                       final currentText = widget.controller.intervalController.text;
                       if (currentText.isNotEmpty) {
                         final currentInterval = int.tryParse(currentText);
-                        if (currentInterval != null && currentInterval > 1) {
+                        if (currentInterval != null && currentInterval >= 1) {
                           final newInterval = currentInterval - 1;
                           widget.controller.intervalController.text = newInterval.toString();
                           widget.controller.setIntervalHours(newInterval);
@@ -112,7 +123,7 @@ class _MedicineRegisterScreenState extends State<MedicineRegisterScreen> {
                   ),
                   SizedBox(
                     width: 60,
-                    child: TextField(
+                    child: TextFormField(
                       textAlign: TextAlign.center,
                       keyboardType: TextInputType.number,
                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
@@ -124,6 +135,13 @@ class _MedicineRegisterScreenState extends State<MedicineRegisterScreen> {
                             widget.controller.setIntervalHours(newInterval);
                           }
                         }
+                      },
+                      validator: (value) {
+                        final intValue = int.tryParse(value ?? '');
+                        if (intValue == null || intValue <= 0) {
+                          return 'Inválido.';
+                        }
+                        return null;
                       },
                     ),
                   ),
@@ -144,102 +162,104 @@ class _MedicineRegisterScreenState extends State<MedicineRegisterScreen> {
                 ],
               ),
               const SizedBox(height: 16),
-              Consumer<MedicineRegisterController>(
-                builder: (context, controller, child) {
-                  return Column(
-                    children: [
-                      DropdownButtonFormField<String>(
-                        decoration: const InputDecoration(
-                          labelText: 'Forma farmacêutica',
-                          border: OutlineInputBorder(),
-                        ),
-                        items: controller.pharmaceuticalForms
-                            .map((form) => DropdownMenuItem(
-                                  value: form,
-                                  child: Text(form),
-                                ))
-                            .toList(),
-                        onChanged: (value) {
-                          controller.selectedPharmaceuticalForm = value;
-                        },
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Por favor, selecione uma forma farmacêutica.';
-                          }
-                          return null;
-                        },
+              Consumer<MedicineRegisterController>(builder: (context, controller, child) {
+                return Column(
+                  children: [
+                    DropdownButtonFormField<String>(
+                      decoration: const InputDecoration(
+                        labelText: 'Forma farmacêutica',
+                        border: OutlineInputBorder(),
                       ),
-                      const SizedBox(height: 16),
-                      DropdownButtonFormField<String>(
-                        decoration: const InputDecoration(
-                          labelText: 'Classe terapêutica',
-                          border: OutlineInputBorder(),
-                        ),
-                        items: controller.therapeuticCategories
-                            .map((category) => DropdownMenuItem(
-                                  value: category,
-                                  child: Text(category),
-                                ))
-                            .toList(),
-                        onChanged: (value) {
-                          controller.selectedTherapeuticCategory = value;
-                        },
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Por favor, selecione uma categoria terapêutica.';
-                          }
-                          return null;
-                        },
+                      items: controller.pharmaceuticalForms
+                          .map((form) => DropdownMenuItem(
+                                value: form,
+                                child: Text(form),
+                              ))
+                          .toList(),
+                      onChanged: (value) {
+                        controller.selectedPharmaceuticalForm = value;
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Por favor, selecione uma forma farmacêutica.';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    DropdownButtonFormField<String>(
+                      decoration: const InputDecoration(
+                        labelText: 'Classe terapêutica',
+                        border: OutlineInputBorder(),
                       ),
-                      const SizedBox(height: 16),
-                      ListTile(
-                        title: Text(
-                          widget.controller.expirationDate == null
-                              ? 'Selecione a data de validade'
-                              : 'Validade: ${widget.controller.expirationDate?.day}/${widget.controller.expirationDate?.month}/${widget.controller.expirationDate?.year}',
-                        ),
-                        trailing: const Icon(Icons.calendar_today),
-                        onTap: () async {
-                          final pickedDate = await showDatePicker(
-                            context: context,
-                            initialDate: DateTime.now(),
-                            firstDate: DateTime.now(),
-                            lastDate: DateTime(2100),
-                          );
-                          if (pickedDate != null) {
-                            widget.controller.setExpirationDate(pickedDate);
-                          }
-                        },
+                      items: controller.therapeuticCategories
+                          .map((category) => DropdownMenuItem(
+                                value: category,
+                                child: Text(category),
+                              ))
+                          .toList(),
+                      onChanged: (value) {
+                        controller.selectedTherapeuticCategory = value;
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Por favor, selecione uma categoria terapêutica.';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    ListTile(
+                      title: Text(
+                        widget.controller.expirationDate == null
+                            ? 'Selecione a data de validade'
+                            : 'Validade: ${widget.controller.expirationDate?.day}/${widget.controller.expirationDate?.month}/${widget.controller.expirationDate?.year}',
                       ),
-                    ],
-                  );
-                },
-              ),
-              const SizedBox(height: 16),
-              Consumer<MedicineRegisterController>(
-                builder: (context, value, child) {
-                  return value.isLoading
-                      ? const Align(
-                          alignment: Alignment.center,
-                          child: SizedBox(
-                            width: 25,
-                            height: 25,
-                            child: CircularProgressIndicator(),
-                          ),
-                        )
-                      : Align(
-                          alignment: Alignment.center,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              if (formKey.currentState!.validate()) {
-                                value.saveMedicine(context);
-                              }
-                            },
-                            child: const Text('Salvar medicamento'),
-                          ),
+                      trailing: const Icon(Icons.calendar_today),
+                      onTap: () async {
+                        final pickedDate = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime.now(),
+                          lastDate: DateTime(2100),
                         );
-                },
-              ),
+                        if (pickedDate != null) {
+                          widget.controller.setExpirationDate(pickedDate);
+                        }
+                      },
+                    ),
+                  ],
+                );
+              }),
+              const SizedBox(height: 16),
+              Consumer<MedicineRegisterController>(builder: (context, value, child) {
+                return value.isLoading
+                    ? const Align(
+                        alignment: Alignment.center,
+                        child: SizedBox(
+                          width: 25,
+                          height: 25,
+                          child: CircularProgressIndicator(),
+                        ),
+                      )
+                    : Align(
+                        alignment: Alignment.center,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (formKey.currentState!.validate()) {
+                              if (widget.controller.expirationDate == null) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text('Por favor, selecione a data de validade.')),
+                                );
+                                return;
+                              }
+                              value.saveMedicine(context);
+                            }
+                          },
+                          child: const Text('Salvar medicamento'),
+                        ));
+              }),
             ],
           ),
         ),

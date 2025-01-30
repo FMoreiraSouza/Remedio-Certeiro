@@ -7,11 +7,10 @@ import 'package:remedio_certeiro/screens_routes.dart';
 import 'package:remedio_certeiro/utils/app_theme.dart';
 import 'package:remedio_certeiro/utils/shared_preferences_service.dart';
 
-final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
-
-// Inicializando o plugin de notificações
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,7 +33,6 @@ void main() async {
   );
 }
 
-// Função para inicializar o Flutter Local Notifications
 Future<void> _initializeNotifications() async {
   const AndroidInitializationSettings initializationSettingsAndroid =
       AndroidInitializationSettings('@mipmap/ic_launcher'); // Ícone da notificação
@@ -43,7 +41,18 @@ Future<void> _initializeNotifications() async {
     android: initializationSettingsAndroid,
   );
 
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  await flutterLocalNotificationsPlugin.initialize(
+    initializationSettings,
+    onDidReceiveBackgroundNotificationResponse: _onSelectNotification,
+  );
+}
+
+Future<void> _onSelectNotification(NotificationResponse details) async {
+  if (details.payload != null) {
+    print('Notification Payload: ${details.payload}');
+    // Use a navigatorKey para navegar, já que context não está disponível
+    navigatorKey.currentState?.pushNamed(ScreensRoutes.home);
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -54,7 +63,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      scaffoldMessengerKey: scaffoldMessengerKey, // Usando o ScaffoldMessenger global
+      navigatorKey: navigatorKey, // Chave do Navigator
       theme: AppTheme.getTheme(),
       onGenerateTitle: (context) {
         return 'Remédio Certeiro';

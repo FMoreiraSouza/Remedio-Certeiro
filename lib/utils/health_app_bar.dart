@@ -2,9 +2,10 @@
 import 'package:remedio_certeiro/screens_routes.dart';
 
 class HealthAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const HealthAppBar({super.key, required this.title});
+  const HealthAppBar({super.key, required this.title, this.isHomeScreen = true});
 
   final String title;
+  final bool isHomeScreen;
 
   @override
   Widget build(BuildContext context) {
@@ -17,11 +18,14 @@ class HealthAppBar extends StatelessWidget implements PreferredSizeWidget {
             Navigator.pushNamed(context, ScreensRoutes.medicineRegister);
           },
         ),
-        IconButton(
-          icon: const Icon(Icons.person),
-          onPressed: () {
-            Navigator.pushNamed(context, ScreensRoutes.profile);
-          },
+        Visibility(
+          visible: isHomeScreen,
+          child: IconButton(
+            icon: const Icon(Icons.person),
+            onPressed: () {
+              Navigator.pushNamed(context, ScreensRoutes.profile);
+            },
+          ),
         ),
       ],
     );

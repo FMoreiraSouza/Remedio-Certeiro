@@ -30,88 +30,84 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       body: Consumer<ProfileController>(
         builder: (context, controller, child) {
-          return Stack(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+          if (controller.isLoading) {
+            // Exibe o CircularProgressIndicator enquanto os dados estão sendo carregados
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // Nome
+                Row(
                   children: [
-                    // Nome
-                    Row(
-                      children: [
-                        const Icon(Icons.person),
-                        const SizedBox(width: 8),
-                        Text('Nome: ${controller.user?.name}',
-                            style: const TextStyle(fontSize: 16)),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Telefone
-                    Row(
-                      children: [
-                        const Icon(Icons.phone),
-                        const SizedBox(width: 8),
-                        Text('Telefone: ${controller.userInfoModel?.phone}',
-                            style: const TextStyle(fontSize: 16)),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Idade
-                    Row(
-                      children: [
-                        const Icon(Icons.calendar_today),
-                        const SizedBox(width: 8),
-                        Text('Idade: ${controller.userInfoModel?.age}',
-                            style: const TextStyle(fontSize: 16)),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-
-                    // CPF
-                    Row(
-                      children: [
-                        const Icon(Icons.credit_card),
-                        const SizedBox(width: 8),
-                        Text('CPF: ${controller.userInfoModel?.cpf}',
-                            style: const TextStyle(fontSize: 16)),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-
-                    // E-mail
-                    Row(
-                      children: [
-                        const Icon(Icons.email),
-                        const SizedBox(width: 8),
-                        Text('E-mail: ${controller.user?.email}',
-                            style: const TextStyle(fontSize: 16)),
-                      ],
-                    ),
-                    const SizedBox(height: 32),
-                    ElevatedButton(
-                      style: const ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.red)),
-                      onPressed: () {
-                        controller.logout(context);
-                      },
-                      child: const Text(
-                        "Sair",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
+                    const Icon(Icons.person),
+                    const SizedBox(width: 8),
+                    Text('Nome: ${controller.user?.name ?? 'Carregando...'}',
+                        style: const TextStyle(fontSize: 16)),
                   ],
                 ),
-              ),
-              if (controller.isLoading)
-                Container(
-                  color: Colors.white,
-                  child: const Center(
-                    child: CircularProgressIndicator(),
+                const SizedBox(height: 16),
+
+                // Telefone
+                Row(
+                  children: [
+                    const Icon(Icons.phone),
+                    const SizedBox(width: 8),
+                    Text('Telefone: ${controller.userInfoModel?.phone ?? 'Carregando...'}',
+                        style: const TextStyle(fontSize: 16)),
+                  ],
+                ),
+                const SizedBox(height: 16),
+
+                // Idade
+                Row(
+                  children: [
+                    const Icon(Icons.calendar_today),
+                    const SizedBox(width: 8),
+                    Text('Idade: ${controller.userInfoModel?.age ?? 'Carregando...'}',
+                        style: const TextStyle(fontSize: 16)),
+                  ],
+                ),
+                const SizedBox(height: 16),
+
+                // CPF
+                Row(
+                  children: [
+                    const Icon(Icons.credit_card),
+                    const SizedBox(width: 8),
+                    Text('CPF: ${controller.userInfoModel?.cpf ?? 'Carregando...'}',
+                        style: const TextStyle(fontSize: 16)),
+                  ],
+                ),
+                const SizedBox(height: 16),
+
+                // E-mail
+                Row(
+                  children: [
+                    const Icon(Icons.email),
+                    const SizedBox(width: 8),
+                    Text('E-mail: ${controller.user?.email ?? 'Carregando...'}',
+                        style: const TextStyle(fontSize: 16)),
+                  ],
+                ),
+                const SizedBox(height: 32),
+                ElevatedButton(
+                  style: const ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.red)),
+                  onPressed: () {
+                    controller.logout(context);
+                  },
+                  child: const Text(
+                    "Sair",
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
-            ],
+              ],
+            ),
           );
         },
       ),

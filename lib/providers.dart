@@ -18,7 +18,8 @@ List<SingleChildWidget> getProviders() {
               Provider.of<AppWriteService>(context, listen: false),
             )),
 
-    ChangeNotifierProvider(create: (context) => HomeController()),
+    ChangeNotifierProvider(
+        create: (context) => HomeController(Provider.of<AppWriteService>(context, listen: false))),
 
     ChangeNotifierProvider(
         create: (context) =>

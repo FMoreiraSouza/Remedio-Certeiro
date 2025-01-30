@@ -18,9 +18,9 @@ String formatDosageInterval(String interval) {
 
     // Formata a string de acordo com a diferença de tempo
     if (hours > 0) {
-      return '$hours horas ${minutes}m';
+      return '$hours hora(s) ${minutes}m';
     } else if (minutes > 0) {
-      return '$minutes minutos';
+      return '$minutes minuto(s)';
     } else {
       return 'Agora';
     }
