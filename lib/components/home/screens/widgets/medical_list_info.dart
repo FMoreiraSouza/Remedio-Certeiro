@@ -7,9 +7,11 @@ class MedicalListInfo extends StatelessWidget {
   const MedicalListInfo({
     super.key,
     required this.medicine,
+    required this.deleteMedicine,
   });
 
   final MedicineModel medicine;
+  final Future<void> Function(String) deleteMedicine; // Alteração aqui
 
   @override
   Widget build(BuildContext context) {
@@ -34,13 +36,22 @@ class MedicalListInfo extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    IconButton(
+                      icon: const Icon(Icons.delete, color: Colors.red),
+                      onPressed: () async {
+                        await deleteMedicine(medicine.id);
+
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Medicamento removido com sucesso!")),
+                          );
+                        }
+                      },
+                    ),
                     Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 32.0),
-                        child: Text(
-                          '${medicine.name}',
-                          textAlign: TextAlign.center,
-                        ),
+                      child: Text(
+                        '${medicine.name}',
+                        textAlign: TextAlign.center,
                       ),
                     ),
                     Text(
@@ -101,19 +112,13 @@ class MedicalListInfo extends StatelessWidget {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () async {
-                      // Verifica o intervalo de horas em minutos
-                      final intervalInMinutes = (medicine.interval ?? 0) * 60;
+                      final nextDoseTime = DateTime.now().add(const Duration(minutes: 7 ?? 0));
 
-                      // Calcula a próxima hora de dose considerando o intervalo
-                      final nextDoseTime = DateTime.now().add(Duration(minutes: intervalInMinutes));
-
-                      // Salva o horário da próxima dose no banco de dados
                       await DatabaseHelper.instance.saveMedicineHour(
                         medicine.name ?? "Nome Indefinido",
                         nextDoseTime,
                       );
 
-                      // Exibe a mensagem de confirmação
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text("Dose aplicada para ${medicine.name}")),
                       );

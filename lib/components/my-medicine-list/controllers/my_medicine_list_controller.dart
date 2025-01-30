@@ -27,8 +27,8 @@ class MyMedicineListController extends ChangeNotifier {
 
   Future<void> fetchMedicines() async {
     _isLoading = true;
-    _errorMessage = null;
     notifyListeners();
+    _errorMessage = null;
 
     try {
       final appwrite.DocumentList response = await _appWriteService.database.listDocuments(
@@ -44,5 +44,24 @@ class MyMedicineListController extends ChangeNotifier {
 
     _isLoading = false;
     notifyListeners();
+  }
+
+  Future<void> deleteMedicine(String documentId) async {
+    _isLoading = true;
+    notifyListeners();
+    try {
+      await _appWriteService.database.deleteDocument(
+        databaseId: '67944210001fd099f8bc',
+        collectionId: '679989e700274100acf1',
+        documentId: documentId,
+      );
+
+      _medicines.removeWhere((medicine) => medicine.id == documentId);
+    } catch (e) {
+      _errorMessage = 'Erro ao deletar medicamento: $e';
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 }

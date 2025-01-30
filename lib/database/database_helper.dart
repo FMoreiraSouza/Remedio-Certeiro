@@ -52,14 +52,13 @@ class DatabaseHelper {
     return await db.query('medicineHours');
   }
 
-  // Função para atualizar a próxima dose no banco de dados
-  Future<void> updateNextDoseTime(int id, DateTime nextDoseTime) async {
+  // No DatabaseHelper
+  Future<void> deleteMedicine(int id) async {
     final db = await instance.database;
-    await db.update(
+    await db.delete(
       'medicineHours',
-      {'nextDoseTime': nextDoseTime.toIso8601String()},
       where: 'id = ?',
-      whereArgs: [id], // Usando o id numérico para identificar o registro
+      whereArgs: [id],
     );
   }
 }

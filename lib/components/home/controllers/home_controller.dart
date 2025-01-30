@@ -10,4 +10,10 @@ class HomeController extends ChangeNotifier {
     _medicineHours = await DatabaseHelper.instance.fetchMedicineHours();
     notifyListeners();
   }
+
+  // No HomeController
+  Future<void> deleteMedicine(int id) async {
+    await DatabaseHelper.instance.deleteMedicine(id);
+    await fetchMedicineHours(); // Atualiza a lista após a remoção
+  }
 }

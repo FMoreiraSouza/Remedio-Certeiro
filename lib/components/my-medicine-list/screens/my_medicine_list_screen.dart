@@ -56,6 +56,7 @@ class _MyMedicineListScreenState extends State<MyMedicineListScreen> {
                       final remedio = remedios[index];
                       return MedicalListInfo(
                         medicine: remedio,
+                        deleteMedicine: widget.controller.deleteMedicine,
                       );
                     },
                   ),
