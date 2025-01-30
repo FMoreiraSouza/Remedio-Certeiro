@@ -1,5 +1,4 @@
 ﻿import 'package:flutter/material.dart';
-import 'package:remedio_certeiro/database/database_helper.dart';
 import 'package:remedio_certeiro/models/medicine_model.dart';
 import 'package:remedio_certeiro/utils/date_utils.dart';
 
@@ -7,11 +6,13 @@ class MedicalListInfo extends StatelessWidget {
   const MedicalListInfo({
     super.key,
     required this.medicine,
+    required this.saveMedicine,
     required this.deleteMedicine,
   });
 
   final MedicineModel medicine;
   final Future<void> Function(String) deleteMedicine; // Alteração aqui
+  final Future<void> Function(String, DateTime) saveMedicine; // Alteração aqui
 
   @override
   Widget build(BuildContext context) {
@@ -112,9 +113,10 @@ class MedicalListInfo extends StatelessWidget {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () async {
-                      final nextDoseTime = DateTime.now().add(const Duration(minutes: 1 ?? 0));
+                      final nextDoseTime =
+                          DateTime.now().add(Duration(minutes: medicine.interval ?? 0));
 
-                      await DatabaseHelper.instance.saveMedicineHour(
+                      saveMedicine(
                         medicine.name ?? "Nome Indefinido",
                         nextDoseTime,
                       );

@@ -19,19 +19,31 @@ class LoginScreen extends StatelessWidget {
         key: formKey,
         child: Column(
           children: [
+            // Container com o fundo na cor #ffde59
             Expanded(
-              flex: 1,
-              child: Container(
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('resources/images/1.png'),
-                    fit: BoxFit.fill,
-                  ),
-                ),
+              flex: 2,
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final imageHeight = constraints.maxHeight /
+                      3; // Ajusta a altura da imagem conforme a altura disponível
+                  return Container(
+                    color: const Color(0xFFFFDE59), // Cor de fundo #ffde59
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage('resources/images/1.png'),
+                          fit: BoxFit
+                              .contain, // Ajusta a imagem para se ajustar ao tamanho sem cortar e sem deformar
+                        ),
+                      ),
+                      height: imageHeight,
+                    ),
+                  );
+                },
               ),
             ),
             Expanded(
-              flex: 1,
+              flex: 3,
               child: SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),

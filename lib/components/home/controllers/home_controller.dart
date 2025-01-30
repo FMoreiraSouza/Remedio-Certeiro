@@ -7,14 +7,36 @@ class HomeController extends ChangeNotifier {
   HomeController(this._appWriteService);
   final AppWriteService _appWriteService;
 
-  Map<int, bool> loadingStates =
-      {}; // Mapa para controlar o estado de carregamento de cada medicamento
+  Map<int, bool> loadingStates = {};
 
   bool get isLoading => loadingStates.isNotEmpty && loadingStates.values.contains(true);
+
+  Map<int, bool> renewingStates = {};
+
+  bool get isRenewing => renewingStates.isNotEmpty && renewingStates.values.contains(true);
+
+  bool firstLoadingState = false;
+
+  bool get isFirstLoading => firstLoadingState;
 
   List<Map<String, dynamic>> _medicineHours = [];
 
   List<Map<String, dynamic>> get medicineHours => _medicineHours;
+
+  // Função para buscar os horários dos remédios
+  Future<void> firstFecthMedicineHours() async {
+    firstLoadingState = true;
+    notifyListeners();
+
+    await Future.delayed(const Duration(seconds: 2)); // Simula um atraso
+
+    _medicineHours = await DatabaseHelper.instance.fetchMedicineHours();
+    _medicineHours =
+        _medicineHours.map((e) => Map<String, dynamic>.from(e)).toList(); // Força mutabilidade
+
+    firstLoadingState = false;
+    notifyListeners();
+  }
 
   // Função para buscar os horários dos remédios
   Future<void> fetchMedicineHours() async {
@@ -40,6 +62,9 @@ class HomeController extends ChangeNotifier {
   }
 
   Future<void> renewDosage(int medicineId, String medicineName) async {
+    renewingStates[medicineId] = true;
+    notifyListeners();
+
     try {
       final response = await _appWriteService.database.listDocuments(
         databaseId: '67944210001fd099f8bc',
@@ -56,20 +81,19 @@ class HomeController extends ChangeNotifier {
           documentId: documentId,
         );
 
-        int interval = document.data['interval'] ?? 0; // Evita null
+        int interval = document.data['interval'] ?? 0;
         final doseTime = DateTime.now().add(Duration(minutes: interval));
-        // Aqui você precisa atualizar o tempo da dose no banco de dados
 
         await DatabaseHelper.instance.updateMedicineNextDoseTime(medicineId, doseTime);
-
-        await fetchMedicineHours(); // Atualiza a lista de medicamentos na tela
-
-        notifyListeners();
+        await fetchMedicineHours();
       } else {
         print('Nenhum documento encontrado para o medicamento: $medicineName');
       }
     } catch (e) {
       print('Erro ao buscar documento: $e');
+    } finally {
+      renewingStates[medicineId] = false;
+      notifyListeners();
     }
   }
 }

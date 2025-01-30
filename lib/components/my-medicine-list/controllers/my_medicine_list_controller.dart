@@ -1,6 +1,7 @@
 ﻿import 'package:appwrite/models.dart' as appwrite;
 import 'package:flutter/material.dart';
 import 'package:remedio_certeiro/api-setup/app_write_service.dart';
+import 'package:remedio_certeiro/database/database_helper.dart';
 import 'package:remedio_certeiro/models/medicine_model.dart';
 
 class MyMedicineListController extends ChangeNotifier {
@@ -23,6 +24,13 @@ class MyMedicineListController extends ChangeNotifier {
   void setIntervalHours(int newHours) {
     _intervalHours = newHours;
     notifyListeners();
+  }
+
+  Future<void> saveMedicine(String name, DateTime doseTime) async {
+    await DatabaseHelper.instance.saveMedicineHour(
+      name,
+      doseTime,
+    );
   }
 
   Future<void> fetchMedicines() async {

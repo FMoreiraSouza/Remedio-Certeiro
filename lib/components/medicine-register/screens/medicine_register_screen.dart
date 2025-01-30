@@ -101,7 +101,7 @@ class _MedicineRegisterScreenState extends State<MedicineRegisterScreen> {
               const SizedBox(height: 16),
               // Label e Intervalo com botões de incrementar e decrementar
               const Text(
-                'Intervalo entre as doses (em horas):',
+                'Intervalo entre as doses:',
               ),
               const SizedBox(height: 8),
               Row(

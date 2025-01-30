@@ -1,5 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:remedio_certeiro/components/home/controllers/home_controller.dart';
 import 'package:remedio_certeiro/components/home/screens/home_screen.dart';
 import 'package:remedio_certeiro/components/login/controllers/login_controller.dart';
 import 'package:remedio_certeiro/components/login/screens/login_screen.dart';
@@ -30,7 +31,8 @@ Map<String, WidgetBuilder> getRoutes() {
     ScreensRoutes.userRegister: (context) => UserRegisterScreen(
           controller: Provider.of<UserRegisterController>(context, listen: false),
         ),
-    ScreensRoutes.home: (context) => const HomeScreen(),
+    ScreensRoutes.home: (context) =>
+        HomeScreen(controller: Provider.of<HomeController>(context, listen: false)),
 
     ScreensRoutes.myMedicineList: (context) => MyMedicineListScreen(
         controller: Provider.of<MyMedicineListController>(context, listen: false)),

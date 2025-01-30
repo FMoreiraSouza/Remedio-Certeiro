@@ -100,6 +100,7 @@ class _MyMedicineListScreenState extends State<MyMedicineListScreen> {
                     return MedicalListInfo(
                       medicine: remedio,
                       deleteMedicine: widget.controller.deleteMedicine,
+                      saveMedicine: widget.controller.saveMedicine,
                     );
                   },
                 ),
