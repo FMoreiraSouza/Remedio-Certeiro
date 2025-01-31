@@ -1,7 +1,6 @@
 plugins {
     id "com.android.application"
     id "kotlin-android"
-    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
 }
 
@@ -11,16 +10,12 @@ android {
     ndkVersion "25.1.8937393"
     
     compileOptions {
-        // Habilitando o coreLibraryDesugaring
         coreLibraryDesugaringEnabled true
-
-        // Configurando para Java 17, já que o jvmTarget está definido como 17
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
     kotlinOptions {
-        // Certificando-se de que o Kotlin está configurado para Java 17
         jvmTarget = JavaVersion.VERSION_1_8
     }
 

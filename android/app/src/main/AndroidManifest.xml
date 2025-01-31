@@ -1,6 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Definindo permissões necessárias para notificações e agendamentos -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
@@ -8,11 +7,9 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 
     <application
-        android:label="remedio_certeiro"
+        android:label="Remédio Certeiro"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
-
-        <!-- Recebedores para notificações agendadas -->
         <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" />
         <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver">
             <intent-filter>
@@ -22,18 +19,12 @@
                 <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
             </intent-filter>
         </receiver>
-
-        <!-- Receiver para ações de notificação -->
         <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ActionBroadcastReceiver" />
-
-        <!-- Serviço de primeiro plano para notificações -->
         <service
             android:name="com.dexterous.flutterlocalnotifications.ForegroundService"
             android:exported="false"
             android:stopWithTask="false"
             android:foregroundServiceType="dataSync|mediaPlayback" />
-
-        <!-- Declarando a atividade principal -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -51,8 +42,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
-        <!-- Outras atividades e configurações -->
         <activity android:name="com.linusu.flutter_web_auth_2.CallbackActivity" android:exported="true">
             <intent-filter android:label="flutter_web_auth_2">
                 <action android:name="android.intent.action.VIEW" />
@@ -61,19 +50,14 @@
                 <data android:scheme="appwrite-callback-67906537001a621d1f53" />
             </intent-filter>
         </activity>
-
-        <!-- Configuração do Flutter -->
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
-
-    <!-- Consulta para permissões de processamento de texto -->
     <queries>
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
         </intent>
     </queries>
-
 </manifest>

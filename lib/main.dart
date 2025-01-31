@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart'; // Importando o pacote de notificações
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:remedio_certeiro/database/database_helper.dart';
 import 'package:remedio_certeiro/providers.dart';
 import 'package:remedio_certeiro/screens_routes.dart';
@@ -15,14 +15,12 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Inicialize as preferências e o banco de dados
   await SharedPreferencesService.init();
 
   final sessionId = SharedPreferencesService.getString('sessionId');
 
   await DatabaseHelper.instance.database;
 
-  // Inicialize as configurações de notificações
   await _initializeNotifications();
 
   runApp(
@@ -35,7 +33,7 @@ void main() async {
 
 Future<void> _initializeNotifications() async {
   const AndroidInitializationSettings initializationSettingsAndroid =
-      AndroidInitializationSettings('@mipmap/ic_launcher'); // Ícone da notificação
+      AndroidInitializationSettings('@mipmap/ic_launcher');
 
   const InitializationSettings initializationSettings = InitializationSettings(
     android: initializationSettingsAndroid,
@@ -50,7 +48,7 @@ Future<void> _initializeNotifications() async {
 
 Future<void> _onSelectNotification(NotificationResponse details) async {
   if (details.payload != null) {
-    Navigator.of(navigatorKey.currentContext!).pushReplacementNamed(details.payload ?? "");
+    Navigator.of(navigatorKey.currentContext!).pushNamed(details.payload ?? "");
   }
 }
 
@@ -62,7 +60,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      navigatorKey: navigatorKey, // Chave do Navigator
+      navigatorKey: navigatorKey,
       theme: AppTheme.getTheme(),
       onGenerateTitle: (context) {
         return 'Remédio Certeiro';

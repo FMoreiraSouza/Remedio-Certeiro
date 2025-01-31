@@ -1,9 +1,9 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:remedio_certeiro/components/home/screens/widgets/medical_list_info.dart';
+import 'package:remedio_certeiro/components/home/controllers/home_controller.dart';
+import 'package:remedio_certeiro/components/home/screens/widgets/medicine_list_info.dart';
 import 'package:remedio_certeiro/components/my-medicine-list/controllers/my_medicine_list_controller.dart';
 import 'package:remedio_certeiro/screens_routes.dart';
-import 'package:remedio_certeiro/utils/health_app_bar.dart';
 
 class MyMedicineListScreen extends StatefulWidget {
   const MyMedicineListScreen({super.key, required this.controller});
@@ -27,19 +27,35 @@ class _MyMedicineListScreenState extends State<MyMedicineListScreen> {
   Widget build(BuildContext context) {
     return Consumer<MyMedicineListController>(
       builder: (context, controller, child) {
+        final remedios = controller.medicines;
         if (controller.isLoading) {
-          return const Scaffold(
-            appBar: HealthAppBar(
-              title: "Meus Remédios",
+          return Center(
+            child: Container(
+              color: const Color(0xFFF5F5DC),
+              child: const Center(
+                child: CircularProgressIndicator(),
+              ),
             ),
-            body: Center(child: CircularProgressIndicator()),
           );
         }
-        final remedios = controller.medicines;
         return Scaffold(
-          appBar: const HealthAppBar(
-            title: "Meus Remédios",
-            isHomeScreen: false,
+          appBar: AppBar(
+            title: const Text("Meus Remédios"),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.medical_services),
+                onPressed: () {
+                  Navigator.pushNamed(context, ScreensRoutes.medicineRegister);
+                },
+              ),
+            ],
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(context);
+                Provider.of<HomeController>(context, listen: false).firstFecthMedicineHours();
+              },
+            ),
           ),
           body: remedios.isEmpty
               ? Center(
@@ -97,7 +113,7 @@ class _MyMedicineListScreenState extends State<MyMedicineListScreen> {
                   itemCount: remedios.length,
                   itemBuilder: (context, index) {
                     final remedio = remedios[index];
-                    return MedicalListInfo(
+                    return MedicineListInfo(
                       medicine: remedio,
                       deleteMedicine: widget.controller.deleteMedicine,
                       saveMedicine: widget.controller.saveMedicine,

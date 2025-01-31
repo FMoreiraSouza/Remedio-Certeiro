@@ -43,12 +43,10 @@
     return null;
   }
 
-  // Validação de email com expressão regular
   String? validateEmail(String? value) {
     if (value == null || value.isEmpty) {
       return 'Por favor, insira seu email';
     }
-    // Regex para validar formato de email
     final emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$');
     if (!emailRegex.hasMatch(value)) {
       return 'Por favor, insira um email válido';
@@ -56,12 +54,10 @@
     return null;
   }
 
-  // Validação de telefone com expressão regular
   String? validatePhone(String? value) {
     if (value == null || value.isEmpty) {
       return 'Por favor, insira seu telefone';
     }
-    // Regex para validar telefone (considerando formato brasileiro)
     final phoneRegex = RegExp(r'^\(?\d{2}\)?\s?\d{4,5}-?\d{4}$');
     if (!phoneRegex.hasMatch(value)) {
       return 'Por favor, insira um telefone válido';

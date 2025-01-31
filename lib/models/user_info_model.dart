@@ -9,14 +9,6 @@
     required this.phone,
   });
 
-  Map<String, dynamic> toMap() {
-    return {
-      'age': age,
-      'cpf': cpf,
-      'phone': phone,
-    };
-  }
-
   factory UserInfoModel.fromMap(Map<String, dynamic> map) {
     return UserInfoModel(
       age: map['age'],

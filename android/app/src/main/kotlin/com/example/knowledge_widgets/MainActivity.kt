@@ -18,11 +18,16 @@ class MainActivity : FlutterActivity() {
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
-            if (call.method == "playAlarm") {
-                playAlarm()
-                result.success(null)
-            } else {
-                result.notImplemented()
+            when (call.method) {
+                "playAlarm" -> {
+                    playAlarm()
+                    result.success(null)
+                }
+                "stopAlarm" -> {
+                    stopAlarm()
+                    result.success(null)
+                }
+                else -> result.notImplemented()
             }
         }
     }
@@ -31,10 +36,13 @@ class MainActivity : FlutterActivity() {
         val alarmUri: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
         ringtone = RingtoneManager.getRingtone(applicationContext, alarmUri)
         ringtone?.play()
-
-        // Parar depois de 10 segundos
         handler.postDelayed({
             ringtone?.stop()
         }, 10000)
+    }
+
+    private fun stopAlarm() {
+        ringtone?.stop()
+        ringtone = null
     }
 }

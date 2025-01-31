@@ -19,21 +19,18 @@ class LoginScreen extends StatelessWidget {
         key: formKey,
         child: Column(
           children: [
-            // Container com o fundo na cor #ffde59
             Expanded(
               flex: 3,
               child: LayoutBuilder(
                 builder: (context, constraints) {
-                  final imageHeight = constraints.maxHeight /
-                      3; // Ajusta a altura da imagem conforme a altura disponível
+                  final imageHeight = constraints.maxHeight / 3;
                   return Container(
-                    color: const Color(0xFFFFDE59), // Cor de fundo #ffde59
+                    color: const Color(0xFFFFDE59),
                     child: Container(
                       decoration: const BoxDecoration(
                         image: DecorationImage(
-                          image: AssetImage('resources/images/1.png'),
-                          fit: BoxFit
-                              .contain, // Ajusta a imagem para se ajustar ao tamanho sem cortar e sem deformar
+                          image: AssetImage('resources/images/app_banner.png'),
+                          fit: BoxFit.contain,
                         ),
                       ),
                       height: imageHeight,
@@ -92,6 +89,10 @@ class LoginScreen extends StatelessWidget {
                                       value.login(context);
                                     }
                                   },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.yellow,
+                                    foregroundColor: Colors.black,
+                                  ),
                                   child: const Text('Entrar'),
                                 );
                         },
@@ -101,7 +102,10 @@ class LoginScreen extends StatelessWidget {
                         onPressed: () {
                           Navigator.pushNamed(context, ScreensRoutes.userRegister);
                         },
-                        child: const Text('Cadastrar-se'),
+                        child: const Text(
+                          'Cadastrar-se',
+                          style: TextStyle(color: Colors.black),
+                        ),
                       ),
                     ],
                   ),

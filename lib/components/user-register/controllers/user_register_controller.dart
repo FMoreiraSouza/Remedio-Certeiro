@@ -81,12 +81,12 @@ class UserRegisterController extends ChangeNotifier {
           ),
         );
       }
-    } catch (e) {
+    } catch (_) {
       _isLoading = false;
       notifyListeners();
 
       Fluttertoast.showToast(
-        msg: 'Erro ao cadastrar: $e',
+        msg: 'Erro ao cadastrar',
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.CENTER,
         timeInSecForIosWeb: 2,

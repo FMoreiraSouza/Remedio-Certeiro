@@ -87,10 +87,10 @@ class HomeController extends ChangeNotifier {
         await DatabaseHelper.instance.updateMedicineNextDoseTime(medicineId, doseTime);
         await fetchMedicineHours();
       } else {
-        print('Nenhum documento encontrado para o medicamento: $medicineName');
+        throw ('Nenhum documento encontrado para o medicamento: $medicineName');
       }
     } catch (e) {
-      print('Erro ao buscar documento: $e');
+      throw ('Erro ao buscar documento: $e');
     } finally {
       renewingStates[medicineId] = false;
       notifyListeners();

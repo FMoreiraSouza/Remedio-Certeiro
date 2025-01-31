@@ -43,8 +43,6 @@ class MyMedicineListController extends ChangeNotifier {
         databaseId: '67944210001fd099f8bc',
         collectionId: '679989e700274100acf1',
       );
-
-      // Converte cada documento para um objeto MedicineModel
       _medicines = response.documents.map((doc) => MedicineModel.fromMap(doc.data)).toList();
     } catch (e) {
       _errorMessage = 'Erro: $e';

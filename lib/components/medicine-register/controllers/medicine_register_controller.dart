@@ -27,10 +27,9 @@ class MedicineRegisterController extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Método para atualizar o intervalo e o valor no controlador
   void setIntervalHours(int interval) {
     intervalController.text = interval.toString();
-    notifyListeners(); // Para atualizar a UI
+    notifyListeners();
   }
 
   Future<void> loadData() async {

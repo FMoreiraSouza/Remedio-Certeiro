@@ -31,18 +31,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: Consumer<ProfileController>(
         builder: (context, controller, child) {
           if (controller.isLoading) {
-            // Exibe o CircularProgressIndicator enquanto os dados estão sendo carregados
             return const Center(
               child: CircularProgressIndicator(),
             );
           }
-
           return Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Nome
                 Row(
                   children: [
                     const Icon(Icons.person),
@@ -52,8 +49,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ],
                 ),
                 const SizedBox(height: 16),
-
-                // Telefone
                 Row(
                   children: [
                     const Icon(Icons.phone),
@@ -63,7 +58,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ],
                 ),
                 const SizedBox(height: 16),
-                // E-mail
                 Row(
                   children: [
                     const Icon(Icons.email),
@@ -73,7 +67,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ],
                 ),
                 const SizedBox(height: 16),
-                // Idade
                 Row(
                   children: [
                     const Icon(Icons.calendar_today),
@@ -83,8 +76,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ],
                 ),
                 const SizedBox(height: 16),
-
-                // CPF
                 Row(
                   children: [
                     const Icon(Icons.credit_card),
@@ -93,7 +84,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         style: const TextStyle(fontSize: 16)),
                   ],
                 ),
-
                 const SizedBox(height: 32),
                 ElevatedButton(
                   style: const ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.red)),

@@ -10,7 +10,6 @@ class DatabaseHelper {
   Future<Database> get database async {
     if (_database != null) return _database!;
 
-    // Se o banco de dados não estiver inicializado, inicializa-o.
     _database = await _initDB('medicine_hours.db');
     return _database!;
   }
@@ -18,7 +17,6 @@ class DatabaseHelper {
   Future<Database> _initDB(String path) async {
     final dbPath = await getDatabasesPath();
 
-    // Caminho absoluto para o banco de dados
     final fullPath = '$dbPath/$path';
 
     return await openDatabase(
@@ -45,11 +43,10 @@ class DatabaseHelper {
         'name': name,
         'nextDoseTime': nextDoseTime.toIso8601String(),
       },
-      conflictAlgorithm: ConflictAlgorithm.replace, // Substitui caso o documento já exista
+      conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
 
-  // Função para atualizar o nextDoseTime de um medicamento
   Future<void> updateMedicineNextDoseTime(int id, DateTime nextDoseTime) async {
     final db = await instance.database;
 
@@ -63,13 +60,11 @@ class DatabaseHelper {
     );
   }
 
-  // Função para buscar os dados
   Future<List<Map<String, dynamic>>> fetchMedicineHours() async {
     final db = await instance.database;
     return await db.query('medicineHours');
   }
 
-  // No DatabaseHelper
   Future<void> deleteMedicine(int id) async {
     final db = await instance.database;
     await db.delete(

@@ -2,8 +2,8 @@
 import 'package:remedio_certeiro/models/medicine_model.dart';
 import 'package:remedio_certeiro/utils/date_formats.dart';
 
-class MedicalListInfo extends StatelessWidget {
-  const MedicalListInfo({
+class MedicineListInfo extends StatelessWidget {
+  const MedicineListInfo({
     super.key,
     required this.medicine,
     required this.saveMedicine,
@@ -11,8 +11,8 @@ class MedicalListInfo extends StatelessWidget {
   });
 
   final MedicineModel medicine;
-  final Future<void> Function(String) deleteMedicine; // Alteração aqui
-  final Future<void> Function(String, DateTime) saveMedicine; // Alteração aqui
+  final Future<void> Function(String) deleteMedicine;
+  final Future<void> Function(String, DateTime) saveMedicine;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class MedicalListInfo extends StatelessWidget {
             children: <Widget>[
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 decoration: const BoxDecoration(
                   color: Colors.yellow,
                 ),
@@ -62,7 +62,6 @@ class MedicalListInfo extends StatelessWidget {
                   ],
                 ),
               ),
-              // Detalhes do medicamento
               Row(
                 children: [
                   Expanded(
@@ -108,30 +107,25 @@ class MedicalListInfo extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      final nextDoseTime = DateTime.now().add(
-                        Duration(minutes: medicine.interval ?? 0),
-                      );
-
-                      saveMedicine(
-                        medicine.name ?? "Nome Indefinido",
-                        nextDoseTime,
-                      );
-
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("Dose aplicada para ${medicine.name}")),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.yellow,
-                      foregroundColor: Colors.black,
-                    ),
-                    child: const Text("Aplicar Dose"),
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: ElevatedButton(
+                  onPressed: () async {
+                    final nextDoseTime = DateTime.now().add(
+                      Duration(minutes: medicine.interval ?? 0),
+                    );
+                    saveMedicine(
+                      medicine.name ?? "Nome Indefinido",
+                      nextDoseTime,
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Dose aplicada para ${medicine.name}")),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.yellow,
+                    foregroundColor: Colors.black,
                   ),
+                  child: const Text("Aplicar Dose"),
                 ),
               ),
             ],

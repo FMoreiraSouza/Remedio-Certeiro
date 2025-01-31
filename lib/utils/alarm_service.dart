@@ -7,7 +7,15 @@ class AlarmService {
     try {
       await _channel.invokeMethod('playAlarm');
     } catch (e) {
-      print("Erro ao tocar alarme: $e");
+      throw ("Erro ao tocar alarme: $e");
+    }
+  }
+
+  static Future<void> stopAlarm() async {
+    try {
+      await _channel.invokeMethod('stopAlarm');
+    } catch (e) {
+      throw ("Erro ao parar alarme: $e");
     }
   }
 }

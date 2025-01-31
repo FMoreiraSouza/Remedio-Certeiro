@@ -1,11 +1,12 @@
-﻿import 'package:flutter/material.dart';
+﻿import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 import 'package:remedio_certeiro/components/home/controllers/home_controller.dart';
-import 'package:remedio_certeiro/main.dart'; // Importando o scaffoldMessengerKey
+import 'package:remedio_certeiro/main.dart';
 import 'package:remedio_certeiro/screens_routes.dart';
-import 'package:remedio_certeiro/utils/date_utils.dart';
-import 'package:remedio_certeiro/utils/health_app_bar.dart';
+import 'package:remedio_certeiro/utils/alarm_service.dart';
+import 'package:remedio_certeiro/utils/date_formats.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, required this.controller});
@@ -17,29 +18,50 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  Timer? _fetchTimer;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       widget.controller.firstFecthMedicineHours();
     });
+    _startFetchTimer();
   }
 
-  final Set<int> _notifiedMedicines = {};
+  @override
+  void dispose() {
+    _fetchTimer?.cancel();
+    super.dispose();
+  }
+
+  void _startFetchTimer() {
+    _fetchTimer = Timer.periodic(const Duration(minutes: 1), (timer) {
+      widget.controller.fetchMedicineHours();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         Scaffold(
-          appBar: const HealthAppBar(
-            title: "Meus Remédios",
+          appBar: AppBar(
+            title: const Text("Remédio Certeiro"),
+            automaticallyImplyLeading: false,
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.person),
+                onPressed: () {
+                  Navigator.pushNamed(context, ScreensRoutes.profile);
+                },
+              ),
+            ],
           ),
           body: Align(
             alignment: Alignment.topCenter,
             child: Consumer<HomeController>(
               builder: (context, controller, child) {
-                controller.fetchMedicineHours();
                 return controller.medicineHours.isEmpty
                     ? Center(
                         child: Column(
@@ -114,86 +136,84 @@ class _HomeScreenState extends State<HomeScreen> {
                               itemCount: controller.medicineHours.length,
                               itemBuilder: (context, index) {
                                 final medicine = controller.medicineHours[index];
-                                int medicineId = medicine['id']; // ID do remédio
-                                String medicineName = medicine['name']; // Nome do remédio
+                                int medicineId = medicine['id'];
+                                String medicineName = medicine['name'];
                                 DateTime nextDoseTime = DateTime.parse(medicine['nextDoseTime']);
                                 Duration difference = nextDoseTime.difference(DateTime.now());
-
-                                // Verifica se faltam exatamente 5 minutos e se já não notificou esse remédio antes
-                                if (difference.inMinutes == 5 &&
-                                    !_notifiedMedicines.contains(medicineId)) {
+                                if (difference.inMinutes == 5) {
                                   _showNotification(medicine['name']);
-                                  _notifiedMedicines.add(medicineId); // Marca como notificado
                                 }
-
+                                if (nextDoseTime.minute == DateTime.now().minute) {
+                                  AlarmService.playAlarm();
+                                }
                                 return Consumer<HomeController>(
-                                  builder: (context, controller, child) {
-                                    bool isLoading = controller.loadingStates[medicineId] ?? false;
-                                    bool isRenewing =
-                                        controller.renewingStates[medicineId] ?? false;
+                                    builder: (context, controller, child) {
+                                  bool isLoading = controller.loadingStates[medicineId] ?? false;
+                                  bool isRenewing = controller.renewingStates[medicineId] ?? false;
 
-                                    return Card(
-                                      margin:
-                                          const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                      child: ListTile(
-                                        title: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(medicine['name']),
-                                            if (nextDoseTime.minute == DateTime.now().minute)
-                                              Consumer<HomeController>(
-                                                builder: (context, controller, child) {
-                                                  return isRenewing
-                                                      ? const SizedBox(
-                                                          height: 24, // Tamanho desejado
-                                                          width: 24, // Tamanho desejado
-                                                          child: CircularProgressIndicator(),
-                                                        )
-                                                      : TextButton(
-                                                          style: TextButton.styleFrom(
-                                                            side: const BorderSide(
-                                                                color: Colors.blue, width: 2),
-                                                            shape: RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius.circular(50),
-                                                            ),
-                                                            backgroundColor: Colors.transparent,
+                                  return Card(
+                                    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                    child: ListTile(
+                                      title: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(medicine['name']),
+                                          if (nextDoseTime.minute == DateTime.now().minute)
+                                            Consumer<HomeController>(
+                                              builder: (context, controller, child) {
+                                                return isRenewing
+                                                    ? const SizedBox(
+                                                        height: 24,
+                                                        width: 24,
+                                                        child: CircularProgressIndicator(),
+                                                      )
+                                                    : TextButton(
+                                                        style: TextButton.styleFrom(
+                                                          side: const BorderSide(
+                                                              color: Colors.yellow, width: 2),
+                                                          shape: RoundedRectangleBorder(
+                                                            borderRadius: BorderRadius.circular(50),
                                                           ),
-                                                          onPressed: () => _renewDosage(
-                                                              medicineId, medicineName),
-                                                          child: const Text(
-                                                            'Renovar Dosagem',
-                                                            style: TextStyle(
-                                                                color: Colors.black, fontSize: 12),
-                                                          ),
-                                                        );
-                                                },
-                                              ),
-                                          ],
-                                        ),
-                                        subtitle: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              'Próxima dose em: ${formatDosageInterval(medicine['nextDoseTime'])}',
+                                                          backgroundColor: Colors.transparent,
+                                                        ),
+                                                        onPressed: () {
+                                                          _renewDosage(medicineId, medicineName);
+                                                          AlarmService.stopAlarm();
+                                                        },
+                                                        child: const Text(
+                                                          'Renovar Dosagem',
+                                                          style: TextStyle(
+                                                              color: Colors.black, fontSize: 12),
+                                                        ),
+                                                      );
+                                              },
                                             ),
-                                            isLoading
-                                                ? const SizedBox(
-                                                    height: 24,
-                                                    width: 24,
-                                                    child: CircularProgressIndicator(),
-                                                  )
-                                                : IconButton(
-                                                    icon:
-                                                        const Icon(Icons.delete, color: Colors.red),
-                                                    onPressed: () => _deleteMedicine(medicineId),
-                                                  ),
-                                          ],
-                                        ),
+                                        ],
                                       ),
-                                    );
-                                  },
-                                );
+                                      subtitle: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            'Próxima dose em: ${formatDosageInterval(medicine['nextDoseTime'])}',
+                                          ),
+                                          isLoading
+                                              ? const SizedBox(
+                                                  height: 24,
+                                                  width: 24,
+                                                  child: CircularProgressIndicator(),
+                                                )
+                                              : IconButton(
+                                                  icon: const Icon(Icons.delete, color: Colors.red),
+                                                  onPressed: () {
+                                                    _deleteMedicine(medicineId);
+                                                    AlarmService.stopAlarm();
+                                                  },
+                                                ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                });
                               },
                             ),
                           ),
@@ -234,18 +254,16 @@ class _HomeScreenState extends State<HomeScreen> {
       android: androidDetails,
     );
 
-    // Payload pode ser qualquer dado que você queira passar ao clicar na notificação.
     await flutterLocalNotificationsPlugin.show(
       0,
       'Alerta de Dose',
       'Em 5 minutos tome seu $medicineName',
       platformDetails,
-      payload: ScreensRoutes.home, // Exemplo de payload
+      payload: ScreensRoutes.home,
     );
   }
 
   void _renewDosage(int medicineId, String medicineName) {
-    // Chama a renovação de dosagem
     Provider.of<HomeController>(context, listen: false).renewDosage(medicineId, medicineName);
   }
 

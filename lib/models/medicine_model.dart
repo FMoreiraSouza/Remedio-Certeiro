@@ -1,5 +1,5 @@
 ﻿class MedicineModel {
-  final String id; // Adicionado o ID do documento
+  final String id;
   final String? name;
   final String? purpose;
   final String? useMode;
@@ -10,7 +10,7 @@
   final DateTime? expirationDate;
 
   MedicineModel({
-    required this.id, // Agora obrigatório
+    required this.id,
     required this.name,
     required this.purpose,
     required this.useMode,
@@ -23,7 +23,7 @@
 
   factory MedicineModel.fromMap(Map<String, dynamic> map) {
     return MedicineModel(
-      id: map['\$id'] as String, // Pegando o ID do Appwrite
+      id: map['\$id'] as String,
       name: map['name'] as String?,
       purpose: map['purpose'] as String?,
       useMode: map['useMode'] as String?,

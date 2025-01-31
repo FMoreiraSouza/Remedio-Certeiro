@@ -33,15 +33,12 @@ Map<String, WidgetBuilder> getRoutes() {
         ),
     ScreensRoutes.home: (context) =>
         HomeScreen(controller: Provider.of<HomeController>(context, listen: false)),
-
     ScreensRoutes.myMedicineList: (context) => MyMedicineListScreen(
         controller: Provider.of<MyMedicineListController>(context, listen: false)),
-
     ScreensRoutes.profile: (context) => ProfileScreen(
           controller: Provider.of<ProfileController>(context, listen: false),
         ),
     ScreensRoutes.medicineRegister: (context) => MedicineRegisterScreen(
         controller: Provider.of<MedicineRegisterController>(context, listen: false)),
-    // ScreensRoutes.medicineList: (context) => const MedicineListScreen(),
   };
 }

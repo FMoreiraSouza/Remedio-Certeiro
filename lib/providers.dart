@@ -17,21 +17,16 @@ List<SingleChildWidget> getProviders() {
         create: (context) => ProfileController(
               Provider.of<AppWriteService>(context, listen: false),
             )),
-
     ChangeNotifierProvider(
         create: (context) => HomeController(Provider.of<AppWriteService>(context, listen: false))),
-
     ChangeNotifierProvider(
         create: (context) =>
             MedicineRegisterController(Provider.of<AppWriteService>(context, listen: false))),
-
     ChangeNotifierProvider(
         create: (context) =>
             MyMedicineListController(Provider.of<AppWriteService>(context, listen: false))),
-
     ChangeNotifierProvider(
         create: (context) =>
             UserRegisterController(Provider.of<AppWriteService>(context, listen: false))),
-    // ChangeNotifierProvider(create: (_) => MedicineListController()),
   ];
 }

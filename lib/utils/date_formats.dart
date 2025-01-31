@@ -12,11 +12,8 @@ String formatDosageInterval(String interval) {
     DateTime parsedDate = DateTime.parse(interval);
     Duration difference =
         parsedDate.isAfter(DateTime.now()) ? parsedDate.difference(DateTime.now()) : Duration.zero;
-
     int hours = difference.inHours;
     int minutes = difference.inMinutes % 60;
-
-    // Formata a string de acordo com a diferença de tempo
     if (hours > 0) {
       return '$hours hora(s) ${minutes}m';
     } else if (minutes > 0) {

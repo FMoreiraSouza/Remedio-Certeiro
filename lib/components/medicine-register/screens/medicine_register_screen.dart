@@ -16,14 +16,12 @@ class _MedicineRegisterScreenState extends State<MedicineRegisterScreen> {
   @override
   void initState() {
     super.initState();
-    // Definir o valor inicial do intervalo como 0
     widget.controller.intervalController.text = '0';
     widget.controller.loadData();
   }
 
   @override
   void dispose() {
-    // Limpar os dados ao sair da tela
     widget.controller.clearData();
     widget.controller.clearExpirationDate();
     super.dispose();
@@ -99,7 +97,6 @@ class _MedicineRegisterScreenState extends State<MedicineRegisterScreen> {
                 },
               ),
               const SizedBox(height: 16),
-              // Label e Intervalo com botões de incrementar e decrementar
               const Text(
                 'Intervalo entre as doses:',
               ),
@@ -257,6 +254,10 @@ class _MedicineRegisterScreenState extends State<MedicineRegisterScreen> {
                               value.saveMedicine(context);
                             }
                           },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.yellow,
+                            foregroundColor: Colors.black,
+                          ),
                           child: const Text('Salvar medicamento'),
                         ));
               }),
