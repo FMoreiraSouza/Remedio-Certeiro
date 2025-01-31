@@ -44,16 +44,13 @@ Future<void> _initializeNotifications() async {
   await flutterLocalNotificationsPlugin.initialize(
     initializationSettings,
     onDidReceiveBackgroundNotificationResponse: _onSelectNotification,
-    onDidReceiveNotificationResponse:
-        _onSelectNotification, // Isso também é necessário para o foreground
+    onDidReceiveNotificationResponse: _onSelectNotification,
   );
 }
 
 Future<void> _onSelectNotification(NotificationResponse details) async {
   if (details.payload != null) {
-    print('Notification Payload: ${details.payload}');
-    // Navegar para a tela desejada com o payload (home ou outra tela)
-    navigatorKey.currentState?.pushNamed(ScreensRoutes.home);
+    Navigator.of(navigatorKey.currentContext!).pushReplacementNamed(details.payload ?? "");
   }
 }
 

@@ -21,7 +21,7 @@ class LoginScreen extends StatelessWidget {
           children: [
             // Container com o fundo na cor #ffde59
             Expanded(
-              flex: 2,
+              flex: 3,
               child: LayoutBuilder(
                 builder: (context, constraints) {
                   final imageHeight = constraints.maxHeight /

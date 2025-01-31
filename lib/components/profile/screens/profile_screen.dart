@@ -63,7 +63,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ],
                 ),
                 const SizedBox(height: 16),
-
+                // E-mail
+                Row(
+                  children: [
+                    const Icon(Icons.email),
+                    const SizedBox(width: 8),
+                    Text('E-mail: ${controller.user?.email ?? 'Carregando...'}',
+                        style: const TextStyle(fontSize: 16)),
+                  ],
+                ),
+                const SizedBox(height: 16),
                 // Idade
                 Row(
                   children: [
@@ -84,17 +93,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         style: const TextStyle(fontSize: 16)),
                   ],
                 ),
-                const SizedBox(height: 16),
 
-                // E-mail
-                Row(
-                  children: [
-                    const Icon(Icons.email),
-                    const SizedBox(width: 8),
-                    Text('E-mail: ${controller.user?.email ?? 'Carregando...'}',
-                        style: const TextStyle(fontSize: 16)),
-                  ],
-                ),
                 const SizedBox(height: 32),
                 ElevatedButton(
                   style: const ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.red)),

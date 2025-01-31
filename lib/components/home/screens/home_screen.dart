@@ -225,8 +225,8 @@ class _HomeScreenState extends State<HomeScreen> {
       'remedy_channel',
       'Remédios',
       channelDescription: 'Notificações para os medicamentos',
-      importance: Importance.high,
-      priority: Priority.high,
+      importance: Importance.max,
+      priority: Priority.max,
       ticker: 'ticker',
     );
 
@@ -240,7 +240,7 @@ class _HomeScreenState extends State<HomeScreen> {
       'Alerta de Dose',
       'Em 5 minutos tome seu $medicineName',
       platformDetails,
-      payload: '/home', // Exemplo de payload
+      payload: ScreensRoutes.home, // Exemplo de payload
     );
   }
 
