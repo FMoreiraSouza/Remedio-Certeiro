@@ -5,6 +5,6 @@ abstract class IUserRepository {
   Future<void> registerUser(
       String email, String password, String name, int age, String cpf, String phone);
   Future<User> login(String email, String password);
-  Future<UserInfo> fetchUserData(String userId);
+  Future<UserInfoModel> fetchUserData(String userId);
   Future<void> logout();
 }

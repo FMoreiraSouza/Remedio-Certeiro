@@ -1,7 +1,8 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:remedio_certeiro/core/constants/colors.dart';
 import 'package:remedio_certeiro/presentation/screens/profile/profile_viewmodel.dart';
+import 'package:remedio_certeiro/presentation/screens/profile/widgets/logout_button_widget.dart';
+import 'package:remedio_certeiro/presentation/screens/profile/widgets/user_row_info_widget.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({super.key});
@@ -30,62 +31,39 @@ class _ProfileViewState extends State<ProfileView> {
           if (viewModel.isLoading) {
             return const Center(child: CircularProgressIndicator());
           }
-          final userInfo = viewModel.userInfo;
+          final user = viewModel.user;
+          final userInfo = viewModel.userInfoModel;
           return Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Row(
-                  children: [
-                    const Icon(Icons.person),
-                    const SizedBox(width: 8),
-                    Text('Nome: ${userInfo?.name ?? 'Carregando...'}',
-                        style: const TextStyle(fontSize: 16)),
-                  ],
+                UserInfoRowWidget(
+                  icon: Icons.person,
+                  text: 'Nome: ${user?.name ?? 'Carregando...'}',
                 ),
                 const SizedBox(height: 16),
-                Row(
-                  children: [
-                    const Icon(Icons.phone),
-                    const SizedBox(width: 8),
-                    Text('Telefone: ${userInfo?.phone ?? 'Carregando...'}',
-                        style: const TextStyle(fontSize: 16)),
-                  ],
+                UserInfoRowWidget(
+                  icon: Icons.phone,
+                  text: 'Telefone: ${userInfo?.phone ?? 'Carregando...'}',
                 ),
                 const SizedBox(height: 16),
-                Row(
-                  children: [
-                    const Icon(Icons.email),
-                    const SizedBox(width: 8),
-                    Text('E-mail: ${userInfo?.email ?? 'Carregando...'}',
-                        style: const TextStyle(fontSize: 16)),
-                  ],
+                UserInfoRowWidget(
+                  icon: Icons.email,
+                  text: 'E-mail: ${user?.email ?? 'Carregando...'}',
                 ),
                 const SizedBox(height: 16),
-                Row(
-                  children: [
-                    const Icon(Icons.calendar_today),
-                    const SizedBox(width: 8),
-                    Text('Idade: ${userInfo?.age ?? 'Carregando...'}',
-                        style: const TextStyle(fontSize: 16)),
-                  ],
+                UserInfoRowWidget(
+                  icon: Icons.calendar_today,
+                  text: 'Idade: ${userInfo?.age ?? 'Carregando...'}',
                 ),
                 const SizedBox(height: 16),
-                Row(
-                  children: [
-                    const Icon(Icons.credit_card),
-                    const SizedBox(width: 8),
-                    Text('CPF: ${userInfo?.cpf ?? 'Carregando...'}',
-                        style: const TextStyle(fontSize: 16)),
-                  ],
+                UserInfoRowWidget(
+                  icon: Icons.credit_card,
+                  text: 'CPF: ${userInfo?.cpf ?? 'Carregando...'}',
                 ),
                 const SizedBox(height: 32),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: AppColors.error),
-                  onPressed: () => viewModel.logout(context),
-                  child: const Text('Sair', style: TextStyle(color: Colors.white)),
-                ),
+                LogoutButtonWidget(viewModel: viewModel),
               ],
             ),
           );

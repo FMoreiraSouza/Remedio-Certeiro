@@ -1,5 +1,5 @@
 ﻿import 'package:flutter/material.dart';
-import 'package:remedio_certeiro/presentation/screens/home/home_screen.dart';
+import 'package:remedio_certeiro/presentation/screens/home/home_view.dart';
 import 'package:remedio_certeiro/presentation/screens/login/login_view.dart';
 import 'package:remedio_certeiro/presentation/screens/medicine_register/medicine_register_view.dart';
 import 'package:remedio_certeiro/presentation/screens/my-medicine-list/my_medicine_list_view.dart';
@@ -20,7 +20,7 @@ class Routes {
     return {
       Routes.login: (context) => const LoginView(),
       Routes.userRegister: (context) => const UserRegisterView(),
-      Routes.home: (context) => const HomeScreen(),
+      Routes.home: (context) => const HomeView(),
       Routes.myMedicineList: (context) => const MyMedicineListView(),
       Routes.profile: (context) => const ProfileView(),
       Routes.medicineRegister: (context) => const MedicineRegisterView(),

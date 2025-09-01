@@ -1,11 +1,11 @@
-﻿class UserInfo {
+﻿class UserInfoModel {
   final int age;
   final String cpf;
   final String phone;
   final String? name;
   final String? email;
 
-  UserInfo({
+  UserInfoModel({
     required this.age,
     required this.cpf,
     required this.phone,
@@ -13,8 +13,8 @@
     this.email,
   });
 
-  factory UserInfo.fromMap(Map<String, dynamic> map) {
-    return UserInfo(
+  factory UserInfoModel.fromMap(Map<String, dynamic> map) {
+    return UserInfoModel(
       age: map['age'] as int,
       cpf: map['cpf'] as String,
       phone: map['phone'] as String,

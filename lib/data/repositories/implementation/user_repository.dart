@@ -46,7 +46,7 @@ class UserRepository implements IUserRepository {
   }
 
   @override
-  Future<UserInfo> fetchUserData(String userId) async {
+  Future<UserInfoModel> fetchUserData(String userId) async {
     final documents = await appwriteService.database.listDocuments(
       databaseId: '67944210001fd099f8bc',
       collectionId: '6794439e000f4d482ae3',
@@ -54,7 +54,7 @@ class UserRepository implements IUserRepository {
     );
 
     if (documents.total > 0) {
-      return UserInfo.fromMap(documents.documents.first.data);
+      return UserInfoModel.fromMap(documents.documents.first.data);
     } else {
       throw Exception('Documento não encontrado para o userId fornecido.');
     }
