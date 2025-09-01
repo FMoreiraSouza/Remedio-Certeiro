@@ -38,11 +38,10 @@
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
       'name': name,
+      'dosage': dosage,
       'purpose': purpose,
       'useMode': useMode,
-      'dosage': dosage,
       'interval': interval,
       'expirationDate': expirationDate?.toIso8601String(),
       'pharmaceuticalForm': pharmaceuticalForm,

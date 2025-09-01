@@ -17,6 +17,16 @@ class UserRegisterViewModel extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
+  void clearData() {
+    nameController.clear();
+    passwordController.clear();
+    confirmPasswordController.clear();
+    ageController.clear();
+    cpfController.clear();
+    phoneController.clear();
+    emailController.clear();
+  }
+
   Future<void> registerUser(BuildContext context) async {
     _isLoading = true;
     notifyListeners();
@@ -30,6 +40,7 @@ class UserRegisterViewModel extends ChangeNotifier {
         cpfController.text,
         phoneController.text,
       );
+      clearData(); // Limpa os controladores após o cadastro bem-sucedido
       if (context.mounted) {
         showDialog(
           context: context,

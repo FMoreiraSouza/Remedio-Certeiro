@@ -65,7 +65,7 @@ class ProfileViewModel extends ChangeNotifier {
         Navigator.pushNamedAndRemoveUntil(context, Routes.login, (route) => false);
       }
     } catch (e) {
-      _errorMessage = 'Erro ao tentar realizar o logout: $e';
+      _errorMessage = 'Erro ao tentar realizar o logout';
       Fluttertoast.showToast(
         msg: _errorMessage!,
         toastLength: Toast.LENGTH_LONG,

@@ -15,16 +15,22 @@ class MedicineRegisterView extends StatefulWidget {
 
 class _MedicineRegisterViewState extends State<MedicineRegisterView> {
   final formKey = GlobalKey<FormState>();
+  late MedicineRegisterViewModel _viewModel; // Armazenar a referência ao ViewModel
 
   @override
   void initState() {
     super.initState();
-    context.read<MedicineRegisterViewModel>().loadData();
+    // Obter a instância do ViewModel no initState
+    _viewModel = context.read<MedicineRegisterViewModel>();
+    // Agendar a chamada de loadData após a construção do widget
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _viewModel.loadData();
+    });
   }
 
   @override
   void dispose() {
-    context.read<MedicineRegisterViewModel>().clearData();
+    _viewModel.clearData(); // Usar a referência armazenada, sem acessar o context
     super.dispose();
   }
 

@@ -70,11 +70,10 @@ class MedicineRegisterViewModel extends ChangeNotifier {
     dosageController.clear();
     purposeController.clear();
     useModeController.clear();
-    intervalController.clear();
+    intervalController.text = '0'; // Define como '0' em vez de limpar
     _selectedPharmaceuticalForm = null;
     _selectedTherapeuticCategory = null;
     _expirationDate = null;
-    notifyListeners();
   }
 
   Future<void> saveMedicine(BuildContext context) async {

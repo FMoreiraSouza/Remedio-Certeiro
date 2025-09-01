@@ -1,5 +1,4 @@
-﻿// Serviço para interagir com a API do Appwrite.
-import 'package:appwrite/appwrite.dart';
+﻿import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart';
 import 'package:flutter/foundation.dart';
 
