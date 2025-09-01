@@ -1,18 +1,25 @@
-﻿// Widget para os campos de texto do formulário de cadastro de medicamentos.
-import 'package:flutter/material.dart';
-import 'package:remedio_certeiro/presentation/screens/medicine_register/medicine_register_viewmodel.dart';
+﻿import 'package:flutter/material.dart';
 
 class MedicineFormFieldsWidget extends StatelessWidget {
-  final MedicineRegisterViewModel viewModel;
+  final TextEditingController nameController;
+  final TextEditingController dosageController;
+  final TextEditingController purposeController;
+  final TextEditingController useModeController;
 
-  const MedicineFormFieldsWidget({super.key, required this.viewModel});
+  const MedicineFormFieldsWidget({
+    super.key,
+    required this.nameController,
+    required this.dosageController,
+    required this.purposeController,
+    required this.useModeController,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         TextFormField(
-          controller: viewModel.nameController,
+          controller: nameController,
           decoration: const InputDecoration(
             labelText: 'Nome do remédio',
             border: OutlineInputBorder(),
@@ -23,7 +30,7 @@ class MedicineFormFieldsWidget extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         TextFormField(
-          controller: viewModel.dosageController,
+          controller: dosageController,
           decoration: const InputDecoration(
             labelText: 'Dosagem (mg, ml)',
             border: OutlineInputBorder(),
@@ -32,7 +39,7 @@ class MedicineFormFieldsWidget extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         TextFormField(
-          controller: viewModel.purposeController,
+          controller: purposeController,
           decoration: const InputDecoration(
             labelText: 'Propósito',
             border: OutlineInputBorder(),
@@ -43,7 +50,7 @@ class MedicineFormFieldsWidget extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         TextFormField(
-          controller: viewModel.useModeController,
+          controller: useModeController,
           decoration: const InputDecoration(
             labelText: 'Modo de uso',
             border: OutlineInputBorder(),

@@ -1,9 +1,10 @@
-﻿import 'dart:async';
-import 'dart:io';
-
+﻿import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:remedio_certeiro/core/states/base_viewmodel.dart';
+import 'package:remedio_certeiro/core/constants/texts.dart';
 import 'package:remedio_certeiro/data/models/medicine_model.dart';
 import 'package:remedio_certeiro/data/repositories/i_medicine_repository.dart';
+import 'package:remedio_certeiro/core/utils/failure_handler.dart';
 
 class MyMedicineListViewModel extends BaseViewModel {
   final IMedicineRepository repository;
@@ -23,7 +24,6 @@ class MyMedicineListViewModel extends BaseViewModel {
   Future<void> fetchMedicines({bool isFirstFetch = false}) async {
     try {
       setLoading(isFirstLoad: isFirstFetch);
-
       _medicines = await repository.fetchMedicines();
 
       if (_medicines.isEmpty) {
@@ -31,21 +31,20 @@ class MyMedicineListViewModel extends BaseViewModel {
       } else {
         setSuccess();
       }
-    } on SocketException catch (e) {
-      setNoConnection('Erro de conexão: ${e.message}');
-    } on HttpException catch (e) {
-      setError('Erro no servidor: ${e.message}');
-    } on TimeoutException catch (e) {
-      setError('Tempo de conexão excedido: ${e.message}');
     } catch (e) {
-      setError('Erro inesperado: ${e.toString()}');
+      final errorMessage = FailureHandler.handleException(e, context: 'fetch');
+
+      if (errorMessage == Texts.noConnection) {
+        setNoConnection(errorMessage);
+      } else {
+        setError(errorMessage);
+      }
     }
   }
 
   Future<void> deleteMedicine(String id) async {
     try {
       setLoading();
-
       await repository.deleteMedicine(id);
       _medicines.removeWhere((medicine) => medicine.id == id);
 
@@ -54,21 +53,38 @@ class MyMedicineListViewModel extends BaseViewModel {
       } else {
         setSuccess();
       }
-    } on SocketException catch (e) {
-      setNoConnection('Erro de conexão: ${e.message}');
-    } on HttpException catch (e) {
-      setError('Erro no servidor: ${e.message}');
+      _showToast('Medicamento excluído com sucesso!');
     } catch (e) {
-      setError('Erro ao deletar medicamento: ${e.toString()}');
+      final errorMessage = FailureHandler.handleException(e, context: 'delete');
+      _showToast(errorMessage);
+
+      if (errorMessage == Texts.noConnection) {
+        setNoConnection(errorMessage);
+      } else {
+        setError(errorMessage);
+      }
     }
   }
 
   Future<void> saveMedicineHour(String name, DateTime doseTime) async {
     try {
       await repository.saveMedicineHour(name, doseTime);
+      _showToast('Horário de medicamento salvo!');
     } catch (e) {
-      // Você pode tratar erros específicos aqui
-      rethrow;
+      final errorMessage = FailureHandler.handleException(e, context: 'save');
+      _showToast(errorMessage);
+      throw errorMessage;
     }
+  }
+
+  void _showToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.BOTTOM,
+      backgroundColor: Colors.black87,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
   }
 }

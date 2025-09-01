@@ -1,11 +1,20 @@
 ﻿import 'package:flutter/material.dart';
-import 'package:remedio_certeiro/presentation/screens/medicine_register/medicine_register_viewmodel.dart';
 
 class DateSaveWidget extends StatelessWidget {
   final GlobalKey<FormState> formKey;
-  final MedicineRegisterViewModel viewModel;
+  final DateTime? expirationDate;
+  final bool isLoading;
+  final Function(DateTime) onDateSelected;
+  final VoidCallback onSave;
 
-  const DateSaveWidget({super.key, required this.formKey, required this.viewModel});
+  const DateSaveWidget({
+    super.key,
+    required this.formKey,
+    required this.expirationDate,
+    required this.isLoading,
+    required this.onDateSelected,
+    required this.onSave,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -13,9 +22,9 @@ class DateSaveWidget extends StatelessWidget {
       children: [
         ListTile(
           title: Text(
-            viewModel.expirationDate == null
+            expirationDate == null
                 ? 'Selecione a data de validade'
-                : 'Validade: ${viewModel.expirationDate?.day}/${viewModel.expirationDate?.month}/${viewModel.expirationDate?.year}',
+                : 'Validade: ${expirationDate?.day}/${expirationDate?.month}/${expirationDate?.year}',
           ),
           trailing: const Icon(Icons.calendar_today),
           onTap: () async {
@@ -26,12 +35,12 @@ class DateSaveWidget extends StatelessWidget {
               lastDate: DateTime(2100),
             );
             if (pickedDate != null) {
-              viewModel.setExpirationDate(pickedDate);
+              onDateSelected(pickedDate);
             }
           },
         ),
         const SizedBox(height: 16),
-        viewModel.isLoading
+        isLoading
             ? const Align(
                 alignment: Alignment.center,
                 child: SizedBox(width: 25, height: 25, child: CircularProgressIndicator()),
@@ -39,15 +48,7 @@ class DateSaveWidget extends StatelessWidget {
             : Align(
                 alignment: Alignment.center,
                 child: ElevatedButton(
-                  onPressed: () {
-                    if (formKey.currentState!.validate() && viewModel.expirationDate != null) {
-                      viewModel.saveMedicine(context);
-                    } else if (viewModel.expirationDate == null) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Por favor, selecione a data de validade.')),
-                      );
-                    }
-                  },
+                  onPressed: onSave,
                   child: const Text('Salvar medicamento'),
                 ),
               ),

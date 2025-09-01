@@ -1,7 +1,7 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:remedio_certeiro/core/states/error_state_widget.dart';
+import 'package:remedio_certeiro/core/states/no_connection_state_widget.dart';
 import 'package:remedio_certeiro/core/states/view_state_enum.dart';
-import 'package:remedio_certeiro/core/widgets/error_state_widget.dart';
-import 'package:remedio_certeiro/core/widgets/no_connection_state_widget.dart';
 
 class StateHandler extends StatelessWidget {
   final ViewStateEnum state;
@@ -28,7 +28,7 @@ class StateHandler extends StatelessWidget {
         children: [
           successWidget,
           Container(
-            color: Colors.black.withOpacity(0.3),
+            color: Colors.white,
             child: const Center(
               child: CircularProgressIndicator(),
             ),

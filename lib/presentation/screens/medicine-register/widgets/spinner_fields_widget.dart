@@ -1,10 +1,18 @@
 ﻿import 'package:flutter/material.dart';
-import 'package:remedio_certeiro/presentation/screens/medicine_register/medicine_register_viewmodel.dart';
 
 class SpinnerFieldsWidget extends StatelessWidget {
-  final MedicineRegisterViewModel viewModel;
+  final List<String> pharmaceuticalForms;
+  final List<String> therapeuticCategories;
+  final Function(String?) onPharmaceuticalFormSelected;
+  final Function(String?) onTherapeuticCategorySelected;
 
-  const SpinnerFieldsWidget({super.key, required this.viewModel});
+  const SpinnerFieldsWidget({
+    super.key,
+    required this.pharmaceuticalForms,
+    required this.therapeuticCategories,
+    required this.onPharmaceuticalFormSelected,
+    required this.onTherapeuticCategorySelected,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -15,10 +23,10 @@ class SpinnerFieldsWidget extends StatelessWidget {
             labelText: 'Forma farmacêutica',
             border: OutlineInputBorder(),
           ),
-          items: viewModel.pharmaceuticalForms
+          items: pharmaceuticalForms
               .map((form) => DropdownMenuItem(value: form, child: Text(form)))
               .toList(),
-          onChanged: (value) => viewModel.selectedPharmaceuticalForm = value,
+          onChanged: onPharmaceuticalFormSelected,
           validator: (value) => value == null || value.isEmpty
               ? 'Por favor, selecione uma forma farmacêutica.'
               : null,
@@ -29,10 +37,10 @@ class SpinnerFieldsWidget extends StatelessWidget {
             labelText: 'Classe terapêutica',
             border: OutlineInputBorder(),
           ),
-          items: viewModel.therapeuticCategories
+          items: therapeuticCategories
               .map((category) => DropdownMenuItem(value: category, child: Text(category)))
               .toList(),
-          onChanged: (value) => viewModel.selectedTherapeuticCategory = value,
+          onChanged: onTherapeuticCategorySelected,
           validator: (value) => value == null || value.isEmpty
               ? 'Por favor, selecione uma categoria terapêutica.'
               : null,

@@ -1,7 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:remedio_certeiro/presentation/screens/home/home_view.dart';
 import 'package:remedio_certeiro/presentation/screens/login/login_view.dart';
-import 'package:remedio_certeiro/presentation/screens/medicine_register/medicine_register_view.dart';
+import 'package:remedio_certeiro/presentation/screens/medicine-register/medicine_register_view.dart';
 import 'package:remedio_certeiro/presentation/screens/my-medicine-list/my_medicine_list_view.dart';
 import 'package:remedio_certeiro/presentation/screens/profile/profile_view.dart';
 import 'package:remedio_certeiro/presentation/screens/user-register/user_register_view.dart';

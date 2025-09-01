@@ -31,31 +31,47 @@ class DatabaseHelper {
   }
 
   Future<void> saveMedicineHour(String name, DateTime nextDoseTime) async {
-    final db = await database;
-    await db.insert(
-      'medicineHours',
-      {'name': name, 'nextDoseTime': nextDoseTime.toIso8601String()},
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    try {
+      final db = await database;
+      await db.insert(
+        'medicineHours',
+        {'name': name, 'nextDoseTime': nextDoseTime.toIso8601String()},
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<void> updateMedicineNextDoseTime(int id, DateTime nextDoseTime) async {
-    final db = await database;
-    await db.update(
-      'medicineHours',
-      {'nextDoseTime': nextDoseTime.toIso8601String()},
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    try {
+      final db = await database;
+      await db.update(
+        'medicineHours',
+        {'nextDoseTime': nextDoseTime.toIso8601String()},
+        where: 'id = ?',
+        whereArgs: [id],
+      );
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<List<Map<String, dynamic>>> fetchMedicineHours() async {
-    final db = await database;
-    return await db.query('medicineHour');
+    try {
+      final db = await database;
+      return await db.query('medicineHours');
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<void> deleteMedicine(int id) async {
-    final db = await database;
-    await db.delete('medicineHours', where: 'id = ?', whereArgs: [id]);
+    try {
+      final db = await database;
+      await db.delete('medicineHours', where: 'id = ?', whereArgs: [id]);
+    } catch (e) {
+      rethrow;
+    }
   }
 }

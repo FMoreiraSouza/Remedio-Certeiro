@@ -1,9 +1,12 @@
 ﻿import 'dart:async';
-import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:remedio_certeiro/core/states/base_viewmodel.dart';
+import 'package:remedio_certeiro/core/constants/texts.dart';
 import 'package:remedio_certeiro/core/utils/alarm_service.dart';
 import 'package:remedio_certeiro/core/utils/notifications.dart';
 import 'package:remedio_certeiro/data/repositories/i_medicine_repository.dart';
+import 'package:remedio_certeiro/core/utils/failure_handler.dart';
 
 class HomeViewModel extends BaseViewModel {
   final IMedicineRepository repository;
@@ -23,8 +26,7 @@ class HomeViewModel extends BaseViewModel {
   Future<void> fetchMedicineHours({bool isFirstFetch = false}) async {
     try {
       setLoading(isFirstLoad: isFirstFetch);
-
-      await Future.delayed(const Duration(seconds: 2)); // Simula delay de rede
+      await Future.delayed(const Duration(seconds: 2));
       _medicineHours = await repository.fetchMedicineHours();
 
       if (_medicineHours.isEmpty) {
@@ -32,14 +34,14 @@ class HomeViewModel extends BaseViewModel {
       } else {
         setSuccess();
       }
-    } on SocketException catch (e) {
-      setNoConnection('Erro de conexão: ${e.message}');
-    } on HttpException catch (e) {
-      setError('Erro no servidor: ${e.message}');
-    } on TimeoutException catch (e) {
-      setError('Tempo de conexão excedido: ${e.message}');
     } catch (e) {
-      setError('Erro inesperado: ${e.toString()}');
+      final errorMessage = FailureHandler.handleException(e, context: 'fetch');
+
+      if (errorMessage == Texts.noConnection) {
+        setNoConnection(errorMessage);
+      } else {
+        setError(errorMessage);
+      }
     }
   }
 
@@ -51,9 +53,10 @@ class HomeViewModel extends BaseViewModel {
       await repository.deleteMedicineHour(id);
       await fetchMedicineHours();
       AlarmService.stopAlarm();
+      _showToast('Medicamento excluído com sucesso!');
     } catch (e) {
-      // Você pode tratar erros específicos aqui também
-      rethrow;
+      final errorMessage = FailureHandler.handleException(e, context: 'delete');
+      _showToast(errorMessage);
     } finally {
       _loadingStates[id] = false;
       notifyListeners();
@@ -68,8 +71,10 @@ class HomeViewModel extends BaseViewModel {
       await repository.renewDosage(id, name);
       await fetchMedicineHours();
       AlarmService.stopAlarm();
+      _showToast('Dosagem renovada com sucesso!');
     } catch (e) {
-      rethrow;
+      final errorMessage = FailureHandler.handleException(e, context: 'save');
+      _showToast(errorMessage);
     } finally {
       _renewingStates[id] = false;
       notifyListeners();
@@ -94,6 +99,17 @@ class HomeViewModel extends BaseViewModel {
       fetchMedicineHours();
       checkNotifications();
     });
+  }
+
+  void _showToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.BOTTOM,
+      backgroundColor: Colors.black87,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
   }
 
   @override

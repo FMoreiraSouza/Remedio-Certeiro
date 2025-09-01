@@ -63,7 +63,7 @@ class _ProfileViewState extends State<ProfileView> {
                   text: 'CPF: ${userInfo?.cpf ?? 'Carregando...'}',
                 ),
                 const SizedBox(height: 32),
-                LogoutButtonWidget(viewModel: viewModel),
+                LogoutButtonWidget(onLogout: () => viewModel.logout(context)),
               ],
             ),
           );

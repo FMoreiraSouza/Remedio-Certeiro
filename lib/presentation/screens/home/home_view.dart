@@ -71,7 +71,15 @@ class _HomeViewState extends State<HomeView> {
               itemCount: viewModel.medicineHours.length,
               itemBuilder: (context, index) {
                 final medicine = viewModel.medicineHours[index];
-                return MedicineHourCard(medicine: medicine);
+                final int medicineId = medicine['id'];
+                
+                return MedicineHourCard(
+                  medicine: medicine,
+                  isLoading: viewModel.loadingStates[medicineId] ?? false,
+                  isRenewing: viewModel.renewingStates[medicineId] ?? false,
+                  onDelete: () => viewModel.deleteMedicine(medicineId),
+                  onRenew: () => viewModel.renewDosage(medicineId, medicine['name']),
+                );
               },
             ),
           ),

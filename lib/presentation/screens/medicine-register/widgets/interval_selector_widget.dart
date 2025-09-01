@@ -1,12 +1,15 @@
-﻿// Widget para o seletor de intervalo de doses.
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:remedio_certeiro/presentation/screens/medicine_register/medicine_register_viewmodel.dart';
 
 class IntervalSelectorWidget extends StatelessWidget {
-  final MedicineRegisterViewModel viewModel;
+  final TextEditingController intervalController;
+  final Function(int) onIntervalChanged;
 
-  const IntervalSelectorWidget({super.key, required this.viewModel});
+  const IntervalSelectorWidget({
+    super.key,
+    required this.intervalController,
+    required this.onIntervalChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +24,9 @@ class IntervalSelectorWidget extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.remove),
               onPressed: () {
-                final currentInterval = int.tryParse(viewModel.intervalController.text) ?? 0;
+                final currentInterval = int.tryParse(intervalController.text) ?? 0;
                 if (currentInterval >= 1) {
-                  viewModel.setIntervalHours(currentInterval - 1);
+                  onIntervalChanged(currentInterval - 1);
                 }
               },
             ),
@@ -33,11 +36,11 @@ class IntervalSelectorWidget extends StatelessWidget {
                 textAlign: TextAlign.center,
                 keyboardType: TextInputType.number,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                controller: viewModel.intervalController,
+                controller: intervalController,
                 onChanged: (value) {
                   final newInterval = int.tryParse(value);
                   if (newInterval != null) {
-                    viewModel.setIntervalHours(newInterval);
+                    onIntervalChanged(newInterval);
                   }
                 },
                 validator: (value) =>
@@ -49,8 +52,8 @@ class IntervalSelectorWidget extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.add),
               onPressed: () {
-                final currentInterval = int.tryParse(viewModel.intervalController.text) ?? 0;
-                viewModel.setIntervalHours(currentInterval + 1);
+                final currentInterval = int.tryParse(intervalController.text) ?? 0;
+                onIntervalChanged(currentInterval + 1);
               },
             ),
           ],

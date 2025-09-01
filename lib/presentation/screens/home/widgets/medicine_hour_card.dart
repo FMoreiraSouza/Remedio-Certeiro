@@ -1,21 +1,26 @@
 ﻿import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:remedio_certeiro/core/constants/colors.dart';
 import 'package:remedio_certeiro/core/utils/date_formats.dart';
-import 'package:remedio_certeiro/presentation/screens/home/home_viewmodel.dart';
 
 class MedicineHourCard extends StatelessWidget {
   final Map<String, dynamic> medicine;
+  final bool isLoading;
+  final bool isRenewing;
+  final VoidCallback onDelete;
+  final VoidCallback onRenew;
 
-  const MedicineHourCard({super.key, required this.medicine});
+  const MedicineHourCard({
+    super.key, 
+    required this.medicine,
+    required this.isLoading,
+    required this.isRenewing,
+    required this.onDelete,
+    required this.onRenew,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = context.watch<HomeViewModel>();
-    final int medicineId = medicine['id'];
     final String medicineName = medicine['name'];
-    final bool isLoading = viewModel.loadingStates[medicineId] ?? false;
-    final bool isRenewing = viewModel.renewingStates[medicineId] ?? false;
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -32,7 +37,7 @@ class MedicineHourCard extends StatelessWidget {
                       child: CircularProgressIndicator(),
                     )
                   : TextButton(
-                      onPressed: () => viewModel.renewDosage(medicineId, medicineName),
+                      onPressed: onRenew,
                       child: const Text('Renovar Dosagem', style: TextStyle(fontSize: 12)),
                     ),
           ],
@@ -46,10 +51,10 @@ class MedicineHourCard extends StatelessWidget {
                     height: 24,
                     width: 24,
                     child: CircularProgressIndicator(),
-                  )
+                    )
                 : IconButton(
                     icon: const Icon(Icons.delete, color: AppColors.error),
-                    onPressed: () => viewModel.deleteMedicine(medicineId),
+                    onPressed: onDelete,
                   ),
           ],
         ),

@@ -1,6 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:remedio_certeiro/core/constants/texts.dart';
 import 'package:remedio_certeiro/data/repositories/i_user_repository.dart';
+import 'package:remedio_certeiro/core/utils/failure_handler.dart';
 
 class UserRegisterViewModel extends ChangeNotifier {
   final IUserRepository repository;
@@ -12,10 +13,12 @@ class UserRegisterViewModel extends ChangeNotifier {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   bool _isLoading = false;
+  String? _errorMessage;
 
   UserRegisterViewModel(this.repository);
 
   bool get isLoading => _isLoading;
+  String? get errorMessage => _errorMessage;
 
   void clearData() {
     nameController.clear();
@@ -25,10 +28,13 @@ class UserRegisterViewModel extends ChangeNotifier {
     cpfController.clear();
     phoneController.clear();
     emailController.clear();
+    _errorMessage = null;
+    notifyListeners();
   }
 
   Future<void> registerUser(BuildContext context) async {
     _isLoading = true;
+    _errorMessage = null;
     notifyListeners();
 
     try {
@@ -40,7 +46,9 @@ class UserRegisterViewModel extends ChangeNotifier {
         cpfController.text,
         phoneController.text,
       );
-      clearData(); // Limpa os controladores após o cadastro bem-sucedido
+
+      clearData();
+
       if (context.mounted) {
         showDialog(
           context: context,
@@ -62,12 +70,17 @@ class UserRegisterViewModel extends ChangeNotifier {
         );
       }
     } catch (e) {
-      if (context.mounted) {
+      _errorMessage = FailureHandler.handleException(e, context: 'register');
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+
+      if (_errorMessage != null && context.mounted) {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
             title: const Text('Erro'),
-            content: const Text(Texts.errorRegister),
+            content: Text(_errorMessage!),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
@@ -77,9 +90,6 @@ class UserRegisterViewModel extends ChangeNotifier {
           ),
         );
       }
-    } finally {
-      _isLoading = false;
-      notifyListeners();
     }
   }
 }

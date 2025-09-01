@@ -4,6 +4,7 @@ import 'package:remedio_certeiro/core/constants/texts.dart';
 import 'package:remedio_certeiro/data/models/medicine_model.dart';
 import 'package:remedio_certeiro/data/repositories/i_medicine_repository.dart';
 import 'package:remedio_certeiro/presentation/screens/my-medicine-list/my_medicine_list_viewmodel.dart';
+import 'package:remedio_certeiro/core/utils/failure_handler.dart';
 
 class MedicineRegisterViewModel extends ChangeNotifier {
   final IMedicineRepository repository;
@@ -18,6 +19,7 @@ class MedicineRegisterViewModel extends ChangeNotifier {
   String? _selectedTherapeuticCategory;
   DateTime? _expirationDate;
   bool _isLoading = false;
+  String? _errorMessage;
 
   MedicineRegisterViewModel(this.repository) {
     intervalController.text = '0';
@@ -30,6 +32,7 @@ class MedicineRegisterViewModel extends ChangeNotifier {
   String? get selectedTherapeuticCategory => _selectedTherapeuticCategory;
   DateTime? get expirationDate => _expirationDate;
   bool get isLoading => _isLoading;
+  String? get errorMessage => _errorMessage;
 
   set selectedPharmaceuticalForm(String? value) {
     _selectedPharmaceuticalForm = value;
@@ -53,12 +56,14 @@ class MedicineRegisterViewModel extends ChangeNotifier {
 
   Future<void> loadData() async {
     _isLoading = true;
+    _errorMessage = null;
     notifyListeners();
+
     try {
       _pharmaceuticalForms = await repository.fetchPharmaceuticalForms();
       _therapeuticCategories = await repository.fetchTherapeuticCategories();
     } catch (e) {
-      // Handle error
+      _errorMessage = FailureHandler.handleException(e, context: 'loadData');
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -70,15 +75,19 @@ class MedicineRegisterViewModel extends ChangeNotifier {
     dosageController.clear();
     purposeController.clear();
     useModeController.clear();
-    intervalController.text = '0'; // Define como '0' em vez de limpar
+    intervalController.text = '0';
     _selectedPharmaceuticalForm = null;
     _selectedTherapeuticCategory = null;
     _expirationDate = null;
+    _errorMessage = null;
+    notifyListeners();
   }
 
   Future<void> saveMedicine(BuildContext context) async {
     _isLoading = true;
+    _errorMessage = null;
     notifyListeners();
+
     try {
       final medicine = MedicineModel(
         id: 'unique()',
@@ -91,7 +100,9 @@ class MedicineRegisterViewModel extends ChangeNotifier {
         pharmaceuticalForm: _selectedPharmaceuticalForm,
         therapeuticCategory: _selectedTherapeuticCategory,
       );
+
       await repository.saveMedicine(medicine);
+
       if (context.mounted) {
         context.read<MyMedicineListViewModel>().fetchMedicines();
         showDialog(
@@ -114,13 +125,16 @@ class MedicineRegisterViewModel extends ChangeNotifier {
         );
       }
     } catch (e) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Erro ao salvar medicamento: $e')));
-      }
+      _errorMessage = FailureHandler.handleException(e, context: 'save');
     } finally {
       _isLoading = false;
       notifyListeners();
+
+      if (_errorMessage != null && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(_errorMessage!)),
+        );
+      }
     }
   }
 }

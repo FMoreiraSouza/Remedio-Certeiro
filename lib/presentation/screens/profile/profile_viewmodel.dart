@@ -1,8 +1,8 @@
-﻿import 'package:appwrite/appwrite.dart';
-import 'package:appwrite/models.dart';
+﻿import 'package:appwrite/models.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:remedio_certeiro/core/constants/routes.dart';
+import 'package:remedio_certeiro/core/utils/failure_handler.dart';
 import 'package:remedio_certeiro/data/models/user_info_model.dart';
 import 'package:remedio_certeiro/data/repositories/i_user_repository.dart';
 
@@ -28,24 +28,9 @@ class ProfileViewModel extends ChangeNotifier {
     try {
       _user = await repository.getCurrentUser();
       _userInfoModel = await repository.fetchUserData(_user?.$id ?? "-1");
-    } on AppwriteException catch (e) {
-      _errorMessage = e.code == 404
-          ? 'Documento não encontrado para o usuário logado.'
-          : 'Erro ao recuperar dados do usuário: ${e.message}';
-      Fluttertoast.showToast(
-        msg: _errorMessage!,
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 2,
-      );
     } catch (e) {
-      _errorMessage = 'Erro ao recuperar dados do usuário: $e';
-      Fluttertoast.showToast(
-        msg: _errorMessage!,
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 2,
-      );
+      _errorMessage = FailureHandler.handleException(e, context: 'fetch');
+      _showToast(_errorMessage!);
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -64,23 +49,24 @@ class ProfileViewModel extends ChangeNotifier {
           Routes.login,
           (route) => false,
         );
-      } else {
-        // Fallback: usa o contexto local se o navigatorKey não estiver disponível
-        if (context.mounted) {
-          Navigator.pushNamedAndRemoveUntil(context, Routes.login, (route) => false);
-        }
+      } else if (context.mounted) {
+        Navigator.pushNamedAndRemoveUntil(context, Routes.login, (route) => false);
       }
     } catch (e) {
-      _errorMessage = 'Erro ao tentar realizar o logout';
-      Fluttertoast.showToast(
-        msg: _errorMessage!,
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 2,
-      );
+      _errorMessage = FailureHandler.handleException(e, context: 'logout');
+      _showToast(_errorMessage!);
     } finally {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  void _showToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.CENTER,
+      timeInSecForIosWeb: 2,
+    );
   }
 }
