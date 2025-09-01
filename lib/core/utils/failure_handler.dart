@@ -1,5 +1,4 @@
-﻿// core/utils/failure_handler.dart
-import 'dart:async';
+﻿import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 import 'package:appwrite/appwrite.dart';
@@ -23,29 +22,15 @@ class FailureHandler {
     }
   }
 
-  // Método auxiliar para detectar erros de rede do Appwrite
-  static bool isNetworkError(AppwriteException e) {
-    return e.message?.contains('connection') == true ||
-        e.message?.contains('network') == true ||
-        e.message?.contains('socket') == true ||
-        e.message?.contains('timeout') == true ||
-        e.code == 0; // Código 0 geralmente indica erro de conexão
-  }
-
   // Converte AppwriteException em exceções específicas
   static dynamic handleAppwriteException(AppwriteException e) {
-    if (isNetworkError(e)) {
-      return SocketException('Erro de conexão: ${e.message}');
-    }
-    return e; // Mantém outras AppwriteExceptions
+    // Como checkNetworkConnectivity está no NetworkChecker, mantemos a exceção original
+    return e;
   }
 
   // Trata exceções específicas do Appwrite
   static String _handleAppwriteException(AppwriteException e, {String? context}) {
-    if (isNetworkError(e)) {
-      return Texts.noConnection;
-    }
-
+    log('AppwriteException: code=${e.code}, message=${e.message}'); // Debug
     switch (e.code) {
       case 401:
         return Texts.invalidCredentials;
@@ -86,9 +71,7 @@ class FailureHandler {
 
   // Método para lançar exceções convertidas (para usar nos repositórios)
   static dynamic convertAppwriteException(AppwriteException e) {
-    if (isNetworkError(e)) {
-      throw SocketException('Erro de conexão: ${e.message}');
-    }
-    throw e; // Mantém outras exceções
+    // Como checkNetworkConnectivity está no NetworkChecker, mantemos a exceção original
+    return e;
   }
 }

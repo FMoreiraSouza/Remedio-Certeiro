@@ -1,4 +1,5 @@
 ﻿import 'package:appwrite/appwrite.dart';
+import 'package:remedio_certeiro/core/network/checker.dart';
 import 'package:remedio_certeiro/core/utils/database_helper.dart';
 import 'package:remedio_certeiro/core/utils/failure_handler.dart';
 import 'package:remedio_certeiro/data/api/app_write_service.dart';
@@ -14,6 +15,7 @@ class MedicineRepository implements IMedicineRepository {
   @override
   Future<List<MedicineModel>> fetchMedicines() async {
     try {
+      await Checker.checkNetworkConnectivity(context: 'fetch');
       final response = await appwriteService.database.listDocuments(
         databaseId: '67944210001fd099f8bc',
         collectionId: '679989e700274100acf1',
@@ -29,6 +31,7 @@ class MedicineRepository implements IMedicineRepository {
   @override
   Future<void> saveMedicine(MedicineModel medicine) async {
     try {
+      await Checker.checkNetworkConnectivity(context: 'save');
       await appwriteService.database.createDocument(
         databaseId: '67944210001fd099f8bc',
         collectionId: '679989e700274100acf1',
@@ -45,6 +48,7 @@ class MedicineRepository implements IMedicineRepository {
   @override
   Future<void> deleteMedicine(String id) async {
     try {
+      await Checker.checkNetworkConnectivity(context: 'delete');
       await appwriteService.database.deleteDocument(
         databaseId: '67944210001fd099f8bc',
         collectionId: '679989e700274100acf1',
@@ -96,6 +100,7 @@ class MedicineRepository implements IMedicineRepository {
   @override
   Future<void> renewDosage(int medicineId, String medicineName) async {
     try {
+      await Checker.checkNetworkConnectivity(context: 'save');
       final response = await appwriteService.database.listDocuments(
         databaseId: '67944210001fd099f8bc',
         collectionId: '679989e700274100acf1',
@@ -120,6 +125,7 @@ class MedicineRepository implements IMedicineRepository {
   @override
   Future<List<String>> fetchPharmaceuticalForms() async {
     try {
+      await Checker.checkNetworkConnectivity(context: 'fetch');
       final response = await appwriteService.database.listDocuments(
         databaseId: '67944210001fd099f8bc',
         collectionId: '67983990002f46e18dc2',
@@ -135,6 +141,7 @@ class MedicineRepository implements IMedicineRepository {
   @override
   Future<List<String>> fetchTherapeuticCategories() async {
     try {
+      await Checker.checkNetworkConnectivity(context: 'fetch');
       final response = await appwriteService.database.listDocuments(
         databaseId: '67944210001fd099f8bc',
         collectionId: '679839650029fc39778e',

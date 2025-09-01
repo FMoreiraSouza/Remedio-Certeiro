@@ -57,6 +57,11 @@ class HomeViewModel extends BaseViewModel {
     } catch (e) {
       final errorMessage = FailureHandler.handleException(e, context: 'delete');
       _showToast(errorMessage);
+      if (errorMessage == Texts.noConnection) {
+        setNoConnection(errorMessage);
+      } else {
+        setError(errorMessage);
+      }
     } finally {
       _loadingStates[id] = false;
       notifyListeners();
@@ -75,6 +80,11 @@ class HomeViewModel extends BaseViewModel {
     } catch (e) {
       final errorMessage = FailureHandler.handleException(e, context: 'save');
       _showToast(errorMessage);
+      if (errorMessage == Texts.noConnection) {
+        setNoConnection(errorMessage);
+      } else {
+        setError(errorMessage);
+      }
     } finally {
       _renewingStates[id] = false;
       notifyListeners();

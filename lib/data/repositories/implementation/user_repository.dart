@@ -1,5 +1,6 @@
 ﻿import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart';
+import 'package:remedio_certeiro/core/network/checker.dart';
 import 'package:remedio_certeiro/core/utils/failure_handler.dart';
 import 'package:remedio_certeiro/core/utils/shared_preferences_service.dart';
 import 'package:remedio_certeiro/data/api/app_write_service.dart';
@@ -15,6 +16,7 @@ class UserRepository implements IUserRepository {
   Future<void> registerUser(
       String email, String password, String name, int age, String cpf, String phone) async {
     try {
+      await Checker.checkNetworkConnectivity(context: 'register');
       final user = await appwriteService.account.create(
         userId: ID.unique(),
         email: email,
@@ -45,6 +47,7 @@ class UserRepository implements IUserRepository {
   @override
   Future<User> login(String email, String password) async {
     try {
+      await Checker.checkNetworkConnectivity(context: 'login');
       final session = await appwriteService.account.createEmailPasswordSession(
         email: email,
         password: password,
@@ -61,6 +64,7 @@ class UserRepository implements IUserRepository {
   @override
   Future<UserInfoModel> fetchUserData(String userId) async {
     try {
+      await Checker.checkNetworkConnectivity(context: 'fetch');
       final documents = await appwriteService.database.listDocuments(
         databaseId: '67944210001fd099f8bc',
         collectionId: '6794439e000f4d482ae3',
@@ -82,6 +86,7 @@ class UserRepository implements IUserRepository {
   @override
   Future<void> logout() async {
     try {
+      await Checker.checkNetworkConnectivity(context: 'logout');
       await appwriteService.account.deleteSession(sessionId: 'current');
       await SharedPreferencesService.remove('sessionId');
     } on AppwriteException catch (e) {
@@ -94,6 +99,7 @@ class UserRepository implements IUserRepository {
   @override
   Future<User> getCurrentUser() async {
     try {
+      await Checker.checkNetworkConnectivity(context: 'fetch');
       return await appwriteService.account.get();
     } on AppwriteException catch (e) {
       throw FailureHandler.convertAppwriteException(e);
