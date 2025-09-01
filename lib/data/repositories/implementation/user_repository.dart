@@ -14,7 +14,7 @@ class UserRepository implements IUserRepository {
   Future<void> registerUser(
       String email, String password, String name, int age, String cpf, String phone) async {
     final user = await appwriteService.account.create(
-      userId: 'unique()',
+      userId: ID.unique(),
       email: email,
       password: password,
       name: name,
@@ -23,7 +23,7 @@ class UserRepository implements IUserRepository {
     await appwriteService.database.createDocument(
       databaseId: '67944210001fd099f8bc',
       collectionId: '6794439e000f4d482ae3',
-      documentId: 'unique()',
+      documentId: ID.unique(),
       data: {
         'userId': user.$id,
         'age': age,
@@ -41,6 +41,7 @@ class UserRepository implements IUserRepository {
       email: email,
       password: password,
     );
+    print('Session ID salvo: ${session.$id}'); // Log para depuração
     await SharedPreferencesService.saveString('sessionId', session.$id);
     return await appwriteService.account.get();
   }
@@ -64,5 +65,10 @@ class UserRepository implements IUserRepository {
   Future<void> logout() async {
     await appwriteService.account.deleteSession(sessionId: 'current');
     await SharedPreferencesService.remove('sessionId');
+  }
+
+  @override
+  Future<User> getCurrentUser() async {
+    return await appwriteService.account.get();
   }
 }

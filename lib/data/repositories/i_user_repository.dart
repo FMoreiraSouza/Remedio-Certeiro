@@ -7,4 +7,5 @@ abstract class IUserRepository {
   Future<User> login(String email, String password);
   Future<UserInfoModel> fetchUserData(String userId);
   Future<void> logout();
+  Future<User> getCurrentUser(); // Adicionado
 }

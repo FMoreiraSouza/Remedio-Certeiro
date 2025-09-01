@@ -51,7 +51,7 @@ class DatabaseHelper {
 
   Future<List<Map<String, dynamic>>> fetchMedicineHours() async {
     final db = await database;
-    return await db.query('medicineHours');
+    return await db.query('medicineHour');
   }
 
   Future<void> deleteMedicine(int id) async {
