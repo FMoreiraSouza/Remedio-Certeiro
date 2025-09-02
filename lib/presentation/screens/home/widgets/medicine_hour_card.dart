@@ -10,7 +10,7 @@ class MedicineHourCard extends StatelessWidget {
   final VoidCallback onRenew;
 
   const MedicineHourCard({
-    super.key, 
+    super.key,
     required this.medicine,
     required this.isLoading,
     required this.isRenewing,
@@ -21,6 +21,9 @@ class MedicineHourCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String medicineName = medicine['name'];
+    final nextDoseTime = DateTime.parse(medicine['nextDoseTime']);
+    final now = DateTime.now();
+    final difference = nextDoseTime.difference(now);
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -29,16 +32,18 @@ class MedicineHourCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(medicineName),
-            if (DateTime.parse(medicine['nextDoseTime']).minute == DateTime.now().minute)
+            // Mostrar botão de renovar quando estiver no momento do alarme (com tolerância)
+            if (difference.inSeconds <= 30 && difference.inSeconds >= 0)
               isRenewing
                   ? const SizedBox(
                       height: 24,
                       width: 24,
                       child: CircularProgressIndicator(),
                     )
-                  : TextButton(
+                  : IconButton(
+                      icon: const Icon(Icons.refresh, color: Colors.blue),
                       onPressed: onRenew,
-                      child: const Text('Renovar Dosagem', style: TextStyle(fontSize: 12)),
+                      tooltip: 'Renovar Dosagem',
                     ),
           ],
         ),
@@ -51,7 +56,7 @@ class MedicineHourCard extends StatelessWidget {
                     height: 24,
                     width: 24,
                     child: CircularProgressIndicator(),
-                    )
+                  )
                 : IconButton(
                     icon: const Icon(Icons.delete, color: AppColors.error),
                     onPressed: onDelete,

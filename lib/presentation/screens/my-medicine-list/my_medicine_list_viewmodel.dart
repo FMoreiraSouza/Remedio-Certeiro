@@ -53,7 +53,6 @@ class MyMedicineListViewModel extends BaseViewModel {
       } else {
         setSuccess();
       }
-      _showToast('Medicamento excluído com sucesso!');
     } catch (e) {
       final errorMessage = FailureHandler.handleException(e, context: 'delete');
       _showToast(errorMessage);
@@ -69,7 +68,6 @@ class MyMedicineListViewModel extends BaseViewModel {
   Future<void> saveMedicineHour(String name, DateTime doseTime) async {
     try {
       await repository.saveMedicineHour(name, doseTime);
-      _showToast('Horário de medicamento salvo!');
     } catch (e) {
       final errorMessage = FailureHandler.handleException(e, context: 'save');
       _showToast(errorMessage);

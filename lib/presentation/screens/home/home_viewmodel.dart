@@ -14,6 +14,7 @@ class HomeViewModel extends BaseViewModel {
   final Map<int, bool> _loadingStates = {};
   final Map<int, bool> _renewingStates = {};
   Timer? _fetchTimer;
+  final Set<int> _notifiedMedicines = {}; // Para evitar notificações duplicadas
 
   HomeViewModel(this.repository) {
     _startFetchTimer();
@@ -25,7 +26,11 @@ class HomeViewModel extends BaseViewModel {
 
   Future<void> fetchMedicineHours({bool isFirstFetch = false}) async {
     try {
-      setLoading(isFirstLoad: isFirstFetch);
+      // Apenas seta loading se for a primeira busca
+      if (isFirstFetch) {
+        setLoading(isFirstLoad: true);
+      }
+
       await Future.delayed(const Duration(seconds: 2));
       _medicineHours = await repository.fetchMedicineHours();
 
@@ -53,7 +58,6 @@ class HomeViewModel extends BaseViewModel {
       await repository.deleteMedicineHour(id);
       await fetchMedicineHours();
       AlarmService.stopAlarm();
-      _showToast('Medicamento excluído com sucesso!');
     } catch (e) {
       final errorMessage = FailureHandler.handleException(e, context: 'delete');
       _showToast(errorMessage);
@@ -76,7 +80,6 @@ class HomeViewModel extends BaseViewModel {
       await repository.renewDosage(id, name);
       await fetchMedicineHours();
       AlarmService.stopAlarm();
-      _showToast('Dosagem renovada com sucesso!');
     } catch (e) {
       final errorMessage = FailureHandler.handleException(e, context: 'save');
       _showToast(errorMessage);
@@ -92,20 +95,35 @@ class HomeViewModel extends BaseViewModel {
   }
 
   void checkNotifications() {
+    final now = DateTime.now();
+
     for (var medicine in _medicineHours) {
+      final int medicineId = medicine['id'];
       final nextDoseTime = DateTime.parse(medicine['nextDoseTime']);
-      final difference = nextDoseTime.difference(DateTime.now());
-      if (difference.inMinutes == 5) {
-        NotificationService.showNotification(medicine['name']);
+      final difference = nextDoseTime.difference(now);
+
+      // Verificar se falta 5 minutos (300 segundos) com tolerância de 30 segundos
+      if (difference.inSeconds <= 300 && difference.inSeconds > 270) {
+        if (!_notifiedMedicines.contains(medicineId)) {
+          NotificationService.showNotification(medicine['name']);
+          _notifiedMedicines.add(medicineId);
+        }
       }
-      if (nextDoseTime.minute == DateTime.now().minute) {
+
+      // Verificar se é a hora exata do alarme (com tolerância de 30 segundos)
+      if (difference.inSeconds <= 30 && difference.inSeconds >= 0) {
         AlarmService.playAlarm();
+      }
+
+      // Limpar notificações já passadas
+      if (difference.isNegative) {
+        _notifiedMedicines.remove(medicineId);
       }
     }
   }
 
   void _startFetchTimer() {
-    _fetchTimer = Timer.periodic(const Duration(minutes: 1), (timer) {
+    _fetchTimer = Timer.periodic(const Duration(seconds: 15), (timer) {
       fetchMedicineHours();
       checkNotifications();
     });

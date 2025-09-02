@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:remedio_certeiro/core/constants/routes.dart';
 import 'package:remedio_certeiro/core/constants/texts.dart';
 import 'package:remedio_certeiro/core/states/state_handler.dart';
+import 'package:remedio_certeiro/core/states/view_state_enum.dart';
 import 'package:remedio_certeiro/presentation/screens/home/home_viewmodel.dart';
 import 'package:remedio_certeiro/presentation/screens/home/widgets/empty_medicine_widget.dart';
 import 'package:remedio_certeiro/presentation/screens/home/widgets/medicine_hour_card.dart';
@@ -48,7 +49,8 @@ class _HomeViewState extends State<HomeView> {
             onRetry: _retryFetch,
             emptyWidget: const EmptyMedicineWidget(),
             successWidget: _buildContent(viewModel),
-            showLoadingOnTop: !viewModel.isFirstLoad,
+            // Mostra loading por cima apenas se for o primeiro carregamento
+            showLoadingOnTop: viewModel.isFirstLoad && viewModel.state == ViewStateEnum.loading,
           );
         },
       ),
@@ -72,7 +74,7 @@ class _HomeViewState extends State<HomeView> {
               itemBuilder: (context, index) {
                 final medicine = viewModel.medicineHours[index];
                 final int medicineId = medicine['id'];
-                
+
                 return MedicineHourCard(
                   medicine: medicine,
                   isLoading: viewModel.loadingStates[medicineId] ?? false,
