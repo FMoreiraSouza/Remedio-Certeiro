@@ -1,5 +1,5 @@
 ﻿import 'package:flutter/material.dart';
-import 'package:remedio_certeiro/core/constants/colors.dart';
+import 'package:remedio_certeiro/core/constants/app_colors.dart';
 import 'package:remedio_certeiro/core/utils/date_formats.dart';
 import 'package:remedio_certeiro/data/models/medicine_model.dart';
 
@@ -81,7 +81,8 @@ class MedicineListInfoWidget extends StatelessWidget {
               ListTile(
                 leading: const Icon(Icons.date_range),
                 title: Text(
-                  formatExpirationDate(medicine.expirationDate?.toIso8601String() ?? ''),
+                  DateFormats()
+                      .formatExpirationDate(medicine.expirationDate?.toIso8601String() ?? ''),
                   style: const TextStyle(fontSize: 14),
                 ),
               ),

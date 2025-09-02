@@ -1,6 +1,5 @@
-﻿// Widget para exibir o banner superior da tela de login.
-import 'package:flutter/material.dart';
-import 'package:remedio_certeiro/core/constants/colors.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:remedio_certeiro/core/constants/app_colors.dart';
 
 class LoginBannerWidget extends StatelessWidget {
   const LoginBannerWidget({super.key});

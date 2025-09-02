@@ -1,5 +1,5 @@
 ﻿import 'package:flutter/material.dart';
-import 'package:remedio_certeiro/core/constants/colors.dart';
+import 'package:remedio_certeiro/core/constants/app_colors.dart';
 
 class AppTheme {
   static ThemeData getTheme() {

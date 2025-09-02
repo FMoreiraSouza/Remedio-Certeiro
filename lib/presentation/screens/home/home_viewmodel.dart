@@ -1,6 +1,7 @@
 ﻿import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:remedio_certeiro/core/network/checker.dart';
 import 'package:remedio_certeiro/core/states/base_viewmodel.dart';
 import 'package:remedio_certeiro/core/constants/texts.dart';
 import 'package:remedio_certeiro/core/utils/alarm_service.dart';
@@ -14,7 +15,9 @@ class HomeViewModel extends BaseViewModel {
   final Map<int, bool> _loadingStates = {};
   final Map<int, bool> _renewingStates = {};
   Timer? _fetchTimer;
-  final Set<int> _notifiedMedicines = {}; // Para evitar notificações duplicadas
+  final Set<int> _notifiedMedicines = {};
+  final Set<int> _alarmedMedicines = {};
+  int _lastCheckedSecond = -1;
 
   HomeViewModel(this.repository) {
     _startFetchTimer();
@@ -26,9 +29,22 @@ class HomeViewModel extends BaseViewModel {
 
   Future<void> fetchMedicineHours({bool isFirstFetch = false}) async {
     try {
-      // Apenas seta loading se for a primeira busca
       if (isFirstFetch) {
         setLoading(isFirstLoad: true);
+      }
+
+      try {
+        await Checker.checkNetworkConnectivity(context: 'fetch');
+      } catch (e) {
+        final errorMessage = FailureHandler.handleException(e, context: 'fetch');
+        if (errorMessage == Texts.noConnection) {
+          setNoConnection(errorMessage);
+          _medicineHours = await repository.fetchMedicineHours();
+          if (_medicineHours.isNotEmpty) {
+            setSuccess();
+          }
+          return;
+        }
       }
 
       await Future.delayed(const Duration(seconds: 2));
@@ -41,7 +57,6 @@ class HomeViewModel extends BaseViewModel {
       }
     } catch (e) {
       final errorMessage = FailureHandler.handleException(e, context: 'fetch');
-
       if (errorMessage == Texts.noConnection) {
         setNoConnection(errorMessage);
       } else {
@@ -80,6 +95,9 @@ class HomeViewModel extends BaseViewModel {
       await repository.renewDosage(id, name);
       await fetchMedicineHours();
       AlarmService.stopAlarm();
+
+      _notifiedMedicines.remove(id);
+      _alarmedMedicines.remove(id);
     } catch (e) {
       final errorMessage = FailureHandler.handleException(e, context: 'save');
       _showToast(errorMessage);
@@ -96,36 +114,52 @@ class HomeViewModel extends BaseViewModel {
 
   void checkNotifications() {
     final now = DateTime.now();
+    final currentSecond = now.second;
+
+    if (currentSecond == _lastCheckedSecond) {
+      return;
+    }
+
+    _lastCheckedSecond = currentSecond;
 
     for (var medicine in _medicineHours) {
       final int medicineId = medicine['id'];
       final nextDoseTime = DateTime.parse(medicine['nextDoseTime']);
       final difference = nextDoseTime.difference(now);
+      final totalSeconds = difference.inSeconds;
 
-      // Verificar se falta 5 minutos (300 segundos) com tolerância de 30 segundos
-      if (difference.inSeconds <= 300 && difference.inSeconds > 270) {
+      if (totalSeconds == 330) {
         if (!_notifiedMedicines.contains(medicineId)) {
           NotificationService.showNotification(medicine['name']);
           _notifiedMedicines.add(medicineId);
         }
       }
 
-      // Verificar se é a hora exata do alarme (com tolerância de 30 segundos)
-      if (difference.inSeconds <= 30 && difference.inSeconds >= 0) {
-        AlarmService.playAlarm();
+      if (totalSeconds == 30) {
+        if (!_alarmedMedicines.contains(medicineId)) {
+          AlarmService.playAlarm();
+          _alarmedMedicines.add(medicineId);
+        }
       }
 
-      // Limpar notificações já passadas
-      if (difference.isNegative) {
-        _notifiedMedicines.remove(medicineId);
+      if (totalSeconds < 0 || totalSeconds > 300) {
+        if (_notifiedMedicines.contains(medicineId)) {
+          _notifiedMedicines.remove(medicineId);
+        }
+        if (_alarmedMedicines.contains(medicineId)) {
+          _alarmedMedicines.remove(medicineId);
+        }
       }
     }
   }
 
   void _startFetchTimer() {
-    _fetchTimer = Timer.periodic(const Duration(seconds: 15), (timer) {
-      fetchMedicineHours();
+    _fetchTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       checkNotifications();
+    });
+
+    Timer.periodic(const Duration(seconds: 30), (timer) {
+      fetchMedicineHours();
     });
   }
 

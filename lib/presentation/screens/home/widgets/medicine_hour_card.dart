@@ -1,5 +1,5 @@
 ﻿import 'package:flutter/material.dart';
-import 'package:remedio_certeiro/core/constants/colors.dart';
+import 'package:remedio_certeiro/core/constants/app_colors.dart';
 import 'package:remedio_certeiro/core/utils/date_formats.dart';
 
 class MedicineHourCard extends StatelessWidget {
@@ -24,6 +24,10 @@ class MedicineHourCard extends StatelessWidget {
     final nextDoseTime = DateTime.parse(medicine['nextDoseTime']);
     final now = DateTime.now();
     final difference = nextDoseTime.difference(now);
+    final minutes = difference.inMinutes;
+    final seconds = difference.inSeconds;
+
+    final bool shouldShowRenewButton = minutes == 0 && seconds >= 0 && seconds <= 59;
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -32,8 +36,7 @@ class MedicineHourCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(medicineName),
-            // Mostrar botão de renovar quando estiver no momento do alarme (com tolerância)
-            if (difference.inSeconds <= 30 && difference.inSeconds >= 0)
+            if (shouldShowRenewButton)
               isRenewing
                   ? const SizedBox(
                       height: 24,
@@ -45,12 +48,20 @@ class MedicineHourCard extends StatelessWidget {
                       onPressed: onRenew,
                       tooltip: 'Renovar Dosagem',
                     ),
+            if (!shouldShowRenewButton && !isRenewing) const SizedBox(width: 48),
+            if (!shouldShowRenewButton && isRenewing)
+              const SizedBox(
+                height: 24,
+                width: 24,
+                child: CircularProgressIndicator(),
+              ),
           ],
         ),
         subtitle: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Próxima dose em: ${formatDosageInterval(medicine['nextDoseTime'])}'),
+            Text(
+                'Próxima dose em: ${DateFormats().formatDosageInterval(medicine['nextDoseTime'])}'),
             isLoading
                 ? const SizedBox(
                     height: 24,

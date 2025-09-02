@@ -1,5 +1,4 @@
-﻿// Widget para os campos de texto do formulário de cadastro de usuário.
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:remedio_certeiro/core/utils/validators.dart';
 import 'package:remedio_certeiro/presentation/screens/user-register/user_register_viewmodel.dart';

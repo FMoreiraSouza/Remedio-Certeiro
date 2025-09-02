@@ -27,15 +27,15 @@ List<SingleChildWidget> getProviders() {
       create: (context) => UserRepository(context.read<AppWriteService>()),
     ),
     ChangeNotifierProvider(create: (context) => LoginViewModel(context.read<IUserRepository>())),
-    ChangeNotifierProvider(create: (context) => ProfileViewModel(context.read<IUserRepository>())),
-    ChangeNotifierProvider(create: (context) => HomeViewModel(context.read<IMedicineRepository>())),
     ChangeNotifierProvider(
-      create: (context) => MedicineRegisterViewModel(context.read<IMedicineRepository>()),
-    ),
+        create: (context) => UserRegisterViewModel(context.read<IUserRepository>())),
+    ChangeNotifierProvider(create: (context) => HomeViewModel(context.read<IMedicineRepository>())),
+    ChangeNotifierProvider(create: (context) => ProfileViewModel(context.read<IUserRepository>())),
     ChangeNotifierProvider(
       create: (context) => MyMedicineListViewModel(context.read<IMedicineRepository>()),
     ),
     ChangeNotifierProvider(
-        create: (context) => UserRegisterViewModel(context.read<IUserRepository>())),
+      create: (context) => MedicineRegisterViewModel(context.read<IMedicineRepository>()),
+    ),
   ];
 }

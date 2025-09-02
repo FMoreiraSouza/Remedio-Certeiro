@@ -1,5 +1,4 @@
-﻿// Validações para formulários.
-class Validators {
+﻿class Validators {
   String? validateName(String? value) {
     if (value == null || value.isEmpty) {
       return 'Por favor, insira seu nome';

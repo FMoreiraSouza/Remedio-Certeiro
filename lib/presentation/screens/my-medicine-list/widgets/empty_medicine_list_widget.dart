@@ -1,5 +1,4 @@
-﻿// Widget para exibir quando não há medicamentos cadastrados na lista.
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:remedio_certeiro/core/constants/routes.dart';
 
 class EmptyMedicineListWidget extends StatelessWidget {

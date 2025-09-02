@@ -5,9 +5,8 @@ import 'package:appwrite/appwrite.dart';
 import 'package:remedio_certeiro/core/constants/texts.dart';
 
 class FailureHandler {
-  // Converte exceções em mensagens amigáveis
   static String handleException(dynamic exception, {String? context}) {
-    log('Exception: ${exception.runtimeType} - $exception'); // Debug
+    log('Exception: ${exception.runtimeType} - $exception');
 
     if (exception is SocketException) {
       return Texts.noConnection;
@@ -16,21 +15,18 @@ class FailureHandler {
     } else if (exception is AppwriteException) {
       return _handleAppwriteException(exception, context: context);
     } else if (exception is String) {
-      return exception; // Já é uma mensagem amigável
+      return exception;
     } else {
       return _getGenericError(context);
     }
   }
 
-  // Converte AppwriteException em exceções específicas
   static dynamic handleAppwriteException(AppwriteException e) {
-    // Como checkNetworkConnectivity está no NetworkChecker, mantemos a exceção original
     return e;
   }
 
-  // Trata exceções específicas do Appwrite
   static String _handleAppwriteException(AppwriteException e, {String? context}) {
-    log('AppwriteException: code=${e.code}, message=${e.message}'); // Debug
+    log('AppwriteException: code=${e.code}, message=${e.message}');
     switch (e.code) {
       case 401:
         return Texts.invalidCredentials;
@@ -47,7 +43,6 @@ class FailureHandler {
     }
   }
 
-  // Retorna mensagem de erro genérica baseada no contexto
   static String _getGenericError(String? context) {
     switch (context) {
       case 'fetch':
@@ -69,9 +64,7 @@ class FailureHandler {
     }
   }
 
-  // Método para lançar exceções convertidas (para usar nos repositórios)
   static dynamic convertAppwriteException(AppwriteException e) {
-    // Como checkNetworkConnectivity está no NetworkChecker, mantemos a exceção original
     return e;
   }
 }

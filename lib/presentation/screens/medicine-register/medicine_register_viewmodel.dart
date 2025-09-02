@@ -80,7 +80,6 @@ class MedicineRegisterViewModel extends ChangeNotifier {
     _selectedTherapeuticCategory = null;
     _expirationDate = null;
     _errorMessage = null;
-    notifyListeners();
   }
 
   Future<void> saveMedicine(BuildContext context) async {

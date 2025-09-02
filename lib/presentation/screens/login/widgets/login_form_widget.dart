@@ -1,6 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:remedio_certeiro/core/constants/colors.dart';
+import 'package:remedio_certeiro/core/constants/app_colors.dart';
 import 'package:remedio_certeiro/core/constants/routes.dart';
 import 'package:remedio_certeiro/core/utils/validators.dart';
 import 'package:remedio_certeiro/presentation/screens/login/login_viewmodel.dart';

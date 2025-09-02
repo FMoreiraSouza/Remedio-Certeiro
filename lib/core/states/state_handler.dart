@@ -37,7 +37,6 @@ class StateHandler extends StatelessWidget {
       );
     }
 
-    // Mostra tela cheia para estados de loading, error e no connection
     switch (state) {
       case ViewStateEnum.success:
         return successWidget;

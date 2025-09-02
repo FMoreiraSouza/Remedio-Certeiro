@@ -24,7 +24,7 @@ class _UserRegisterViewState extends State<UserRegisterView> {
 
   @override
   void dispose() {
-    _viewModel.clearData(); // Limpa os controladores ao sair da tela
+    _viewModel.clearData();
     super.dispose();
   }
 

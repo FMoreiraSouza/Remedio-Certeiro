@@ -49,7 +49,6 @@ class _HomeViewState extends State<HomeView> {
             onRetry: _retryFetch,
             emptyWidget: const EmptyMedicineWidget(),
             successWidget: _buildContent(viewModel),
-            // Mostra loading por cima apenas se for o primeiro carregamento
             showLoadingOnTop: viewModel.isFirstLoad && viewModel.state == ViewStateEnum.loading,
           );
         },
@@ -61,8 +60,18 @@ class _HomeViewState extends State<HomeView> {
     return Column(
       children: [
         TextButton(
+          style: TextButton.styleFrom(
+            side: const BorderSide(color: Colors.yellow, width: 2),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(50),
+            ),
+            backgroundColor: Colors.transparent,
+          ),
           onPressed: () => Navigator.pushNamed(context, Routes.myMedicineList),
-          child: const Text(Texts.myMedicines),
+          child: const Text(
+            Texts.myMedicines,
+            style: TextStyle(color: Colors.black),
+          ),
         ),
         Expanded(
           child: RefreshIndicator(

@@ -1,6 +1,5 @@
-﻿// core/widgets/state_widgets.dart
-import 'package:flutter/material.dart';
-import 'package:remedio_certeiro/core/constants/colors.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:remedio_certeiro/core/constants/app_colors.dart';
 import 'package:remedio_certeiro/core/constants/texts.dart';
 
 class ErrorStateWidget extends StatelessWidget {

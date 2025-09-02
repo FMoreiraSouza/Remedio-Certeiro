@@ -1,9 +1,8 @@
-﻿// core/states/base_viewmodel.dart
-import 'package:flutter/foundation.dart';
+﻿import 'package:flutter/foundation.dart';
 import 'package:remedio_certeiro/core/states/view_state_enum.dart';
 
 class BaseViewModel with ChangeNotifier {
-  ViewStateEnum _state = ViewStateEnum.loading; // Começa como loading
+  ViewStateEnum _state = ViewStateEnum.loading;
   String? _errorMessage;
   bool _isFirstLoad = true;
 
@@ -48,13 +47,6 @@ class BaseViewModel with ChangeNotifier {
     _state = ViewStateEnum.noConnection;
     _isFirstLoad = false;
     _errorMessage = message;
-    notifyListeners();
-  }
-
-  void reset() {
-    _state = ViewStateEnum.loading;
-    _errorMessage = null;
-    _isFirstLoad = true;
     notifyListeners();
   }
 }

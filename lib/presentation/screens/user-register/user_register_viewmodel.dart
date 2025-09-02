@@ -29,7 +29,6 @@ class UserRegisterViewModel extends ChangeNotifier {
     phoneController.clear();
     emailController.clear();
     _errorMessage = null;
-    notifyListeners();
   }
 
   Future<void> registerUser(BuildContext context) async {
