@@ -89,21 +89,22 @@ class MedicineListInfoWidget extends StatelessWidget {
               const SizedBox(height: 8),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      final nextDoseTime =
-                          DateTime.now().add(Duration(minutes: medicine.interval ?? 0));
-                      await saveMedicine(medicine.name ?? "Nome Indefinido", nextDoseTime);
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Dose aplicada para ${medicine.name}")),
-                        );
-                      }
-                    },
-                    child: const Text("Aplicar Dose"),
+                child: ElevatedButton(
+                  onPressed: () async {
+                    final nextDoseTime =
+                        DateTime.now().add(Duration(minutes: medicine.interval ?? 0));
+                    await saveMedicine(medicine.name ?? "Nome Indefinido", nextDoseTime);
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("Dose aplicada para ${medicine.name}")),
+                      );
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    foregroundColor: AppColors.textPrimary,
                   ),
+                  child: const Text("Aplicar Dose"),
                 ),
               ),
             ],

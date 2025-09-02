@@ -79,20 +79,21 @@ class _HomeViewState extends State<HomeView> {
               await context.read<HomeViewModel>().fetchMedicineHours();
             },
             child: ListView.builder(
-              itemCount: viewModel.medicineHours.length,
-              itemBuilder: (context, index) {
-                final medicine = viewModel.medicineHours[index];
-                final int medicineId = medicine['id'];
-
-                return MedicineHourCard(
-                  medicine: medicine,
-                  isLoading: viewModel.loadingStates[medicineId] ?? false,
-                  isRenewing: viewModel.renewingStates[medicineId] ?? false,
-                  onDelete: () => viewModel.deleteMedicine(medicineId),
-                  onRenew: () => viewModel.renewDosage(medicineId, medicine['name']),
-                );
-              },
-            ),
+                itemCount: viewModel.medicineHours.length,
+                itemBuilder: (context, index) {
+                  final medicine = viewModel.medicineHours[index];
+                  final int medicineId = medicine['id'];
+                  final nextDoseTime = DateTime.parse(medicine['nextDoseTime']);
+                  final uniqueKey = ValueKey('${medicineId}_${nextDoseTime.minute}');
+                  return MedicineHourCard(
+                    key: uniqueKey,
+                    medicine: medicine,
+                    isLoading: viewModel.loadingStates[medicineId] ?? false,
+                    isRenewing: viewModel.renewingStates[medicineId] ?? false,
+                    onDelete: () => viewModel.deleteMedicine(medicineId),
+                    onRenew: () => viewModel.renewDosage(medicineId, medicine['name']),
+                  );
+                }),
           ),
         ),
       ],

@@ -1,6 +1,5 @@
 ﻿import 'package:appwrite/models.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:remedio_certeiro/core/constants/routes.dart';
 import 'package:remedio_certeiro/core/utils/failure_handler.dart';
 import 'package:remedio_certeiro/data/models/user_info_model.dart';
@@ -20,7 +19,7 @@ class ProfileViewModel extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
 
-  Future<void> fetchUserData() async {
+  Future<void> fetchUserData(BuildContext context) async {
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
@@ -30,10 +29,25 @@ class ProfileViewModel extends ChangeNotifier {
       _userInfoModel = await repository.fetchUserData(_user?.$id ?? "-1");
     } catch (e) {
       _errorMessage = FailureHandler.handleException(e, context: 'fetch');
-      _showToast(_errorMessage!);
     } finally {
       _isLoading = false;
       notifyListeners();
+
+      if (_errorMessage != null && context.mounted) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Erro'),
+            content: Text(_errorMessage!),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Ok'),
+              ),
+            ],
+          ),
+        );
+      }
     }
   }
 
@@ -54,19 +68,25 @@ class ProfileViewModel extends ChangeNotifier {
       }
     } catch (e) {
       _errorMessage = FailureHandler.handleException(e, context: 'logout');
-      _showToast(_errorMessage!);
     } finally {
       _isLoading = false;
       notifyListeners();
-    }
-  }
 
-  void _showToast(String message) {
-    Fluttertoast.showToast(
-      msg: message,
-      toastLength: Toast.LENGTH_LONG,
-      gravity: ToastGravity.CENTER,
-      timeInSecForIosWeb: 2,
-    );
+      if (_errorMessage != null && context.mounted) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Erro'),
+            content: Text(_errorMessage!),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Ok'),
+              ),
+            ],
+          ),
+        );
+      }
+    }
   }
 }
