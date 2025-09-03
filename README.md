@@ -9,7 +9,7 @@
 
 ## 📃 Descrição
 
-O **Remédio Certeiro** é uma aplicação Flutter desenvolvida em **Dart** para gerenciamento de medicamentos, permitindo aos usuários acompanhar e organizar suas doses de forma prática e segura. A aplicação segue a **Clean Architecture**, com uma estrutura modular dividida em camadas: **presentation** (interface do usuário e view models), **domain** (modelos, casos de uso e interfaces de repositório) e **data** (implementações de repositórios e acesso a dados). Essa arquitetura garante separação de responsabilidades, facilidade de manutenção e escalabilidade. O aplicativo se integra com o **Appwrite** para autenticação segura, armazenamento de dados e sincronização, além de utilizar notificações locais para lembrar os usuários sobre as próximas doses de medicamentos.
+O Remédio Certeiro é uma aplicação Flutter desenvolvida em Dart para gerenciamento de medicamentos, permitindo aos usuários organizar e acompanhar doses de forma prática e segura. A aplicação adota a arquitetura MVVM (Model-View-ViewModel), estruturada em camadas: presentation (interface do usuário e ViewModels), domain (modelos e interfaces de repositório) e data (implementações de repositórios e acesso a dados). Essa organização garante separação de responsabilidades, manutenibilidade e escalabilidade. O aplicativo se integra com o **Appwrite** para autenticação segura, armazenamento de dados e sincronização, além de utilizar notificações locais para lembrar os usuários sobre as próximas doses de medicamentos.
 
 ---
 
