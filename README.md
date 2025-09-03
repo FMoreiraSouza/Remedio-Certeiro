@@ -46,7 +46,7 @@ O Remédio Certeiro é uma aplicação Flutter desenvolvida em Dart para gerenci
 
 ### Clone o repositório
 
-- git clone URL do projeto
+- git clone <URL_DO_PROJETO>
 
 ### Configuração do Appwrite
 
