@@ -39,24 +39,28 @@ O Remédio Certeiro é uma aplicação Flutter desenvolvida em Dart para gerenci
 ## ▶️ Como Rodar o Projeto
 
 ### Pré-requisitos
+
 - **Flutter** 3.0 ou superior (com Dart incluído).
 - **Visual Studio Code** (recomendado) com extensões Flutter e Dart instaladas.
 - Conta no [Appwrite](https://appwrite.io/) configurada.
 
 ### Clone o repositório
-- git clone https://github.com/seu-user/remedio-certeiro.git
-- cd remedio-certeiro-app
+
+- git clone URL do projeto
 
 ### Configuração do Appwrite
+
 - Crie um projeto no Appwrite:
   - Acesse o Appwrite Cloud e crie um novo projeto.
   - Copie o PROJECT_ID, ENDPOINT, DATABASE_ID, e as IDs das coleções necessárias (users, medicines, pharmaceutical_forms, therapeutic_categories).
 
 ### Configure as credenciais:
+
 - Abra o arquivo lib/data/api/app_write_service.dart.
 - Atualize o endpoint e o projectId com os valores do seu projeto Appwrite:
 
 ### Crie as coleções no Appwrite:
+
 - No painel do Appwrite, crie as seguintes coleções no banco de dados:
   - users: Para armazenar informações do usuário (userId, name, email, age, cpf, phone).
   - medicines: Para armazenar dados dos medicamentos (name, dosage, purpose, useMode, interval, expirationDate, pharmaceuticalForm, therapeuticCategory).
@@ -78,11 +82,18 @@ O Remédio Certeiro é uma aplicação Flutter desenvolvida em Dart para gerenci
 ### Configuração do emulador ou dispositivo
 
 #### Emulador:
+
 - No VS Code, clique em Run > Start Debugging (F5) e selecione um emulador Android/iOS (recomendado: Pixel 6 com API 33 para Android).
 
 #### Dispositivo físico:
+
 - Conecte via USB com Modo Desenvolvedor e Depuração USB habilitados ou use Depuração sem fio (em Opções do desenvolvedor no dispositivo).
 
 ### Execute o aplicativo
+
 - No VS Code, clique em Run > Run Without Debugging (Ctrl + F5) ou, no terminal, execute: flutter run
 - O aplicativo será compilado e executado no emulador ou dispositivo.
+
+## 🎥 Apresentação do Aplicativo
+
+Confira a apresentação do aplicativo: [Apresentação](https://youtu.be/nq1IdgyNeUA)
