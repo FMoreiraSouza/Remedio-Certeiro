@@ -1,4 +1,6 @@
-<img src="resources/images/app_banner.png" alt="Logo" width="400">
+<p align="center">
+  <img src="resources/images/app_banner.png" alt="Logo" width="400">
+</p>
 
 ![Flutter](https://img.shields.io/badge/Flutter-3.35.2-blue?logo=flutter)
 ![Dart](https://img.shields.io/badge/Dart-3.9.0-blue?logo=dart)
