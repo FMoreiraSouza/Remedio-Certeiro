@@ -1,5 +1,3 @@
-# Remédio Certeiro
-
 <img src="resources/images/app_banner.png" alt="Logo" width="400">
 
 ![Flutter](https://img.shields.io/badge/Flutter-3.35.2-blue?logo=flutter)
