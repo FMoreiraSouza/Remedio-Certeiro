@@ -89,7 +89,7 @@ O Remédio Certeiro é uma aplicação Flutter desenvolvida em Dart para gerenci
 
 #### Emulador:
 
-- No Visual Sudio Cod, clique em Run > Start Debugging (F5) e selecione um emulador Android/iOS (recomendado: Pixel 6 com API 33 para Android).
+- No Visual Sudio Code, clique em Run > Start Debugging (F5) e selecione um emulador Android/iOS (recomendado: Pixel 6 com API 33 para Android).
 
 #### Dispositivo físico:
 
