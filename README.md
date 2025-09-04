@@ -22,6 +22,7 @@ O Remédio Certeiro é uma aplicação Flutter desenvolvida em Dart para gerenci
 - **SharedPreferences**: Persistência local para gerenciamento de sessões.
 - **Flutter Local Notifications**: Biblioteca para envio de notificações locais.
 - **Provider**: Gerenciamento de estado para controle das camadas da aplicação.
+- **Connectivity Plus**: Biblioteca para monitoramento da conectividade de rede, permitindo que o aplicativo detecte a disponibilidade de internet e gerencie operações offline com o banco SQFLite, garantindo uma experiência robusta em cenários de falha de conexão.
 
 ---
 
@@ -33,6 +34,13 @@ O Remédio Certeiro é uma aplicação Flutter desenvolvida em Dart para gerenci
 - **Notificações e Alarmes**: Alertas para doses próximas e alarmes sonoros quando o horário da dose está próximo.
 - **Perfil do Usuário**: Exibição de informações pessoais do usuário e opção de logout.
 - **Gerenciamento Offline**: Suporte para operação offline com armazenamento local de dados de doses.
+- **Controle de Estados de Tela**: O aplicativo utiliza a biblioteca Provider e a classe BaseViewModel para gerenciar os estados de tela de forma eficiente, garantindo uma experiência de usuário fluida. Os estados são definidos pelo enum ViewStateEnum e tratados pelo widget StateHandler. As principais características do controle de estados incluem:
+  - **Loading**: Exibe indicadores de carregamento (como CircularProgressIndicator) durante operações assíncronas, como login, cadastro, carregamento de medicamentos ou horários de doses. Suporta exibição de carregamento sobreposto ou em tela cheia, dependendo do contexto.
+  - **Success**: Apresenta os dados carregados com sucesso, como listas de medicamentos, horários de doses ou informações do perfil do usuário, em interfaces organizadas e interativas.
+  - **Empty**: Mostra mensagens amigáveis e botões de ação quando não há dados disponíveis, como em listas vazias de medicamentos (EmptyMedicineListWidget) ou horários de doses (EmptyMedicineWidget).
+  - **Error**: Exibe mensagens de erro detalhadas em dialogs ou snackbars, com opções de tentativa novamente (onRetry) para operações como login, cadastro ou exclusão de medicamentos.
+  - **No Connection**: Integra-se com a biblioteca **Connectivity Plus** para detectar falhas de conectividade em tempo real (ex.: ausência de Wi-Fi ou dados móveis). Quando a conexão é perdida, o estado exibe mensagens específicas via `NoConnectionStateWidget`, com um botão para tentar novamente. O aplicativo utiliza o banco SQFLite para suportar operações offline, como visualização de horários de doses, garantindo funcionalidade contínua.
+  - **Notificações Visuais**: Utiliza dialogs para mensagens de sucesso (ex.: "Cadastro realizado com sucesso!") e erros, snackbars para ações como exclusão de medicamentos ou aplicação de doses, e toasts (via Fluttertoast) para feedback rápido de erros ou ações.
 
 ---
 
@@ -62,10 +70,8 @@ O Remédio Certeiro é uma aplicação Flutter desenvolvida em Dart para gerenci
 ### Crie as coleções no Appwrite:
 
 - No painel do Appwrite, crie as seguintes coleções no banco de dados:
-  - users: Para armazenar informações do usuário (userId, name, email, age, cpf, phone).
-  - medicines: Para armazenar dados dos medicamentos (name, dosage, purpose, useMode, interval, expirationDate, pharmaceuticalForm, therapeuticCategory).
-  - pharmaceutical_forms: Para armazenar formas farmacêuticas disponíveis.
-  - therapeutic_categories: Para armazenar classes terapêuticas disponíveis.
+  - PharmaceuticalForm: Para armazenar formas farmacêuticas disponíveis.
+  - TherapeuticClass: Para armazenar classes terapêuticas disponíveis.
 - Adicione as permissões necessárias para leitura e escrita para usuários autenticados:
 - Crie os documentos iniciais:
   - Para as coleções pharmaceutical_forms e therapeutic_categories, insira documentos com o atributo name contendo os valores desejados (ex.: "Comprimido", "Cápsula" para formas farmacêuticas; "Analgésico", "Antibiótico" para classes terapêuticas).
